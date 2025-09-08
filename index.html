@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Application Workspace Pricing</title>
+  <style>
+    body { margin:0; background:#0b0f14; color:#e5e7eb; font:16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto }
+    .wrap { max-width:960px; margin:0 auto; padding:20px }
+    .card { background:#111827; border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:0 2px 6px rgba(0,0,0,0.3) }
+    h1, h2 { margin:0 0 12px; font-size:20px }
+    label { font-weight:600; display:block; margin-bottom:6px }
+    input, select { width:100%; padding:10px; border-radius:8px; background:#1f2937; color:#fff; border:1px solid #374151 }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px }
+    .tabs { display:flex; margin-bottom:12px; }
+    .tab { flex:1; padding:12px; text-align:center; background:#1f2937; cursor:pointer; border-radius:8px 8px 0 0 }
+    .tab.active { background:#2563eb }
+    .content { display:none }
+    .content.active { display:block }
+    .price-grid { display:grid; grid-template-columns:1fr auto; gap:8px; margin-top:16px }
+    .price-grid div { padding:6px 0; border-bottom:1px dotted #374151 }
+    .total { font-weight:700; font-size:18px }
+    .expand-toggle { cursor:pointer; font-size:14px; color:#60a5fa; margin-top:8px }
+    .entitlements { display:none; margin-top:10px; font-size:14px; line-height:1.6 }
+    .entitlements div { margin:4px 0 }
+    .right { text-align:right }
+    .note { color:#9ca3af; font-size:13px; margin-top:10px }
+    .stamp { font-size:11px; color:#555; margin-top:40px; text-align:center }
+    table { width:100%; border-collapse:collapse; margin-top:16px }
+    th, td { padding:8px 12px; border-bottom:1px solid #374151; text-align:left }
+    th { background:#1f2937 }
+    noscript { display:block; background:#ef4444; color:#fff; padding:10px; text-align:center; font-weight:bold }
+  </style>
+</head>
+<body>
+<noscript>This calculator requires JavaScript to function properly.</noscript>
+<div class="wrap">
+  <div class="card">
+    <h1>Application Workspace Pricing</h1>
+    <div class="grid">
+      <div>
+        <label for="users">User count</label>
+        <input type="number" id="users" min="1" value="10" />
+      </div>
+      <div>
+        <label for="term">Term</label>
+        <select id="term">
+          <option value="Monthly">Month-to-Month</option>
+          <option value="Annual" selected>Annual</option>
+          <option value="3-Year">3-Year</option>
+          <option value="5-Year">5-Year</option>
+        </select>
+      </div>
+    </div>
+    <div class="expand-toggle" onclick="toggleEntitlements()">View included entitlements ▾</div>
+    <div class="entitlements" id="entitlementList">
+      <div><strong>Designed to give every customer the essentials to deliver and manage applications securely:</strong></div>
+      <div>• Release & Patch – Always up-to-date applications with automated patch management.</div>
+      <div>• Access Manager – Centralized control of user and app access.</div>
+      <div>• SaaS Hosting – Cloud-hosted service with high availability.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('quote')">Customer Pricing</div>
+      <div class="tab" onclick="switchTab('partner')">Partner Margin</div>
+    </div>
+
+    <div id="quote" class="content active">
+      <h2>Quote</h2>
+      <div class="price-grid">
+        <div>Per-user monthly (effective)</div><div id="perUser">—</div>
+        <div>User count</div><div id="userQty">—</div>
+        <div class="total">Total monthly (effective)</div><div class="total" id="totalMonthly">—</div>
+        <div>Total per term</div><div id="totalFull">—</div>
+      </div>
+    </div>
+
+    <div id="partner" class="content">
+      <h2>Partner Margin</h2>
+      <div class="tabs">
+        <div class="tab active" onclick="switchPartner('new')">Net New</div>
+        <div class="tab" onclick="switchPartner('renewal')">Renewal</div>
+      </div>
+
+      <div id="partnerNew" class="content active">
+        <table>
+          <thead>
+            <tr><th>Users</th><th>List Price</th><th>Partner Price</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="pnewUsers">—</td>
+              <td id="pnewList">—</td>
+              <td id="pnewPrice">—</td>
+              <td id="pnewTotal">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="partnerRenewal" class="content">
+        <table>
+          <thead>
+            <tr><th>Users</th><th>List Price</th><th>Partner Price</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="prenewUsers">—</td>
+              <td id="prenewList">—</td>
+              <td id="prenewPrice">—</td>
+              <td id="prenewTotal">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="stamp">Build 2025-09-08</div>
+</div>
+
+<script>
+const PRICING = {
+  "Monthly":     { base: 2.95, rp: 1.0, am: 0.5, saas: 1.1, months: 1 },
+  "Annual":      { base: 32.2 / 12, rp: 11.0 / 12, am: 5.32 / 12, saas: 13.2 / 12, months: 12 },
+  "3-Year":      { base: 90.0 / 36, rp: 31.0 / 36, am: 15.0 / 36, saas: 39.6 / 36, months: 36 },
+  "5-Year":      { base: 147.7 / 60, rp: 51.0 / 60, am: 25.5 / 60, saas: 66.0 / 60, months: 60 }
+};
+
+function getVolumeDiscount(users) {
+  if (users >= 25000) return 0.30;
+  if (users >= 10000) return 0.25;
+  if (users >= 5000)  return 0.20;
+  if (users >= 1000)  return 0.15;
+  if (users >= 500)   return 0.10;
+  if (users >= 100)   return 0.05;
+  return 0.00;
+}
+
+function fmt(n) {
+  return n === null || isNaN(n) ? "—" : new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(n);
+}
+
+function calc() {
+  const users = parseInt(document.getElementById("users").value) || 0;
+  const term = document.getElementById("term").value;
+  const p = PRICING[term];
+  const monthlyPerUser = p.base + p.rp + (p.am || 0) + p.saas;
+
+  const volumePct = getVolumeDiscount(users);
+  const discountedUnit = monthlyPerUser * (1 - volumePct);
+  const totalMonthly = discountedUnit * users;
+  const totalFull = totalMonthly * p.months;
+
+  const effectiveUnit = totalMonthly / users;
+
+  document.getElementById("perUser").textContent = fmt(effectiveUnit);
+  document.getElementById("userQty").textContent = users;
+  document.getElementById("totalMonthly").textContent = fmt(totalMonthly);
+  document.getElementById("totalFull").textContent = fmt(totalFull);
+
+  const msrp = totalFull;
+  const marginNew = msrp * 0.30;
+  const partnerCostNew = msrp - marginNew;
+  const marginRenew = msrp * 0.15;
+  const partnerCostRenew = msrp - marginRenew;
+
+  document.getElementById("pnewUsers").textContent = users;
+  document.getElementById("pnewList").textContent = fmt(msrp);
+  document.getElementById("pnewPrice").textContent = fmt(partnerCostNew);
+  document.getElementById("pnewTotal").textContent = fmt(partnerCostNew);
+
+  document.getElementById("prenewUsers").textContent = users;
+  document.getElementById("prenewList").textContent = fmt(msrp);
+  document.getElementById("prenewPrice").textContent = fmt(partnerCostRenew);
+  document.getElementById("prenewTotal").textContent = fmt(partnerCostRenew);
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.tab[onclick*='${id}']`).classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function switchPartner(view) {
+  document.getElementById("partnerNew").classList.remove("active");
+  document.getElementById("partnerRenewal").classList.remove("active");
+  document.querySelectorAll("#partner .tabs .tab").forEach(t => t.classList.remove("active"));
+  document.getElementById(view === 'new' ? "partnerNew" : "partnerRenewal").classList.add("active");
+  document.querySelector(`#partner .tabs .tab[onclick*='${view}']`).classList.add("active");
+}
+
+function toggleEntitlements() {
+  const el = document.getElementById("entitlementList");
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+document.getElementById("users").addEventListener("input", calc);
+document.getElementById("term").addEventListener("change", calc);
+document.addEventListener("DOMContentLoaded", calc);
+</script>
+</body>
+</html>
