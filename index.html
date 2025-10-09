@@ -10,21 +10,20 @@
   <style>
     :root {
       color-scheme: dark;
-      /* Branding palette derived from screenshot */
-      --c-bg: #1F289C;              /* Deep blue page background */
-      --c-surface: #3139A4;         /* Card background */
-      --c-surface-2: #2C35A2;       /* Control surface */
-      --c-surface-3: #8085C7;       /* Dividers / outlines (light indigo) */
-      --c-text: #FFFFFF;            /* Primary text */
-      --c-muted: #DFE0F1;           /* Muted/light text */
-      --c-primary: #F05928;         /* Accent orange for active/CTA */
+      /* Branding palette aligned to screenshot */
+      --c-bg: #1F289C;
+      --c-surface: #3139A4;
+      --c-surface-2: #2C35A2;
+      --c-surface-3: #8085C7;
+      --c-text: #FFFFFF;
+      --c-muted: #DFE0F1;
+      --c-primary: #F05928;
       --c-primary-contrast: #FFFFFF;
       --radius-lg: 1rem;
       --radius-full: 9999px;
       --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
     }
-    /* Graceful degradation if Tailwind fails */
     body:not(.tw-ready) {
       background: var(--c-bg);
       color: var(--c-text);
@@ -34,6 +33,9 @@
     }
   </style>
 </head>
+<body class="bg-[var(--c-bg)] text-[var(--c-text)] min-h-screen font-sans antialiased selection:bg-[var(--c-primary)] selection:text-[var(--c-primary-contrast)]">
+  <a href="#main" class="absolute left-2 top-2 z-50 rounded-[var(--radius-full)] px-4 py-2 bg-[var(--c-primary)] text-[var(--c-primary-contrast)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--c-primary)] focus:ring-offset-[var(--c-bg)]">Skip to content</a>
+
   <div id="cdn-alert" role="alert" aria-live="polite" class="hidden fixed inset-x-0 top-0 z-40 mx-auto max-w-3xl rounded-b-[var(--radius-lg)] bg-[var(--c-surface)]/95 backdrop-blur px-4 py-3 shadow-md">
     <div class="flex items-center gap-3">
       <span class="inline-flex size-5 items-center justify-center rounded-full bg-[var(--c-primary)]/20">
@@ -94,10 +96,10 @@
             <label for="term" class="font-semibold block mb-2">Contract Term</label>
             <select id="term" name="term"
               class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
-              <option value="Monthly">Monthly</option>
-              <option value="Annual" selected>Annual</option>
+              <option value="Monthly" selected>Monthly</option>
+              <option value="Annual">Annual</option>
             </select>
-            <p class="text-xs text-[var(--c-muted)] mt-1">Annual term reflects yearly pricing. Monthly bills month-to-month.</p>
+            <p class="text-xs text-[var(--c-muted)] mt-1">Monthly shows monthly contract value. ARR is annualized.</p>
           </div>
         </form>
 
@@ -299,19 +301,26 @@
 
     const STATE = {
       users: 10,
-      term: 'Annual',
-      pricing: {
-        Monthly: { perUser: 25, months: 1 },
-        Annual: { perUser: 250, months: 12 }
-      },
+      term: 'Monthly', // default aligns with examples
       totals: {
-        baseArr: 0,
-        totalContract: 0,
+        baseArr: 0,           // Annualized revenue (ARR)
+        totalContract: 0,     // Depends on term: monthly or annual
         margin: 0,
         partnerPrice: 0,
         salesCommission: 0
-      }
+      },
+      perUserMonthly: 4.00    // derived from tiering
     };
+
+    function getTierPricePerUserMonthly(users) {
+      if (!Number.isFinite(users) || users < 1) return 0;
+      if (users <= 999) return 4.00;
+      if (users <= 4999) return 3.50;
+      if (users <= 9999) return 3.00;
+      if (users <= 24999) return 2.50;
+      if (users <= 49999) return 2.00;
+      return 1.50; // 50,000+ users: ~$1.50 per user
+    }
 
     function formatCurrency(v) {
       return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(v || 0);
@@ -323,12 +332,17 @@
     }
 
     function computeTotals() {
-      const p = STATE.pricing[STATE.term];
-      const baseArr = p.perUser * STATE.users;
-      const totalContract = baseArr;
+      STATE.perUserMonthly = getTierPricePerUserMonthly(STATE.users);
+      const monthlyCost = STATE.perUserMonthly * STATE.users;
+      const annualCost = monthlyCost * 12;
+
+      const baseArr = annualCost; // ARR is always annualized
+      const totalContract = STATE.term === 'Annual' ? annualCost : monthlyCost;
+
       const margin = totalContract * 0.30;
       const partnerPrice = totalContract - margin;
       const salesCommission = totalContract * 0.10;
+
       STATE.totals = { baseArr, totalContract, margin, partnerPrice, salesCommission };
     }
 
@@ -391,11 +405,14 @@
       const lines = [
         'Recast Pricing Summary',
         '',
-        'Customer Pricing',
+        'Inputs',
         `- Users: ${STATE.users}`,
         `- Term: ${STATE.term}`,
+        `- Tiered MSRP (per-user monthly): ${formatCurrency(STATE.perUserMonthly)}`,
+        '',
+        'Customer Pricing',
         `- Base ARR: ${formatCurrency(STATE.totals.baseArr)}`,
-        `- Total Contract Value: ${formatCurrency(STATE.totals.totalContract)}`,
+        `- Total Contract Value (${STATE.term}): ${formatCurrency(STATE.totals.totalContract)}`,
         '',
         'Partner Pricing',
         `- MSRP (List): ${formatCurrency(STATE.totals.totalContract)}`,
