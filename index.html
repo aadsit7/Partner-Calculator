@@ -10,19 +10,21 @@
   <style>
     :root {
       color-scheme: dark;
-      --c-bg: #0b0f14;
-      --c-surface: #111827;
-      --c-surface-2: #1f2937;
-      --c-surface-3: #374151;
-      --c-text: #e5e7eb;
-      --c-muted: #9ca3af;
-      --c-primary: #f5b301;
-      --c-primary-contrast: #111827;
+      /* Branding palette derived from screenshot */
+      --c-bg: #1F289C;              /* Deep blue page background */
+      --c-surface: #3139A4;         /* Card background */
+      --c-surface-2: #2C35A2;       /* Control surface */
+      --c-surface-3: #8085C7;       /* Dividers / outlines (light indigo) */
+      --c-text: #FFFFFF;            /* Primary text */
+      --c-muted: #DFE0F1;           /* Muted/light text */
+      --c-primary: #F05928;         /* Accent orange for active/CTA */
+      --c-primary-contrast: #FFFFFF;
       --radius-lg: 1rem;
       --radius-full: 9999px;
       --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
     }
+    /* Graceful degradation if Tailwind fails */
     body:not(.tw-ready) {
       background: var(--c-bg);
       color: var(--c-text);
@@ -56,42 +58,42 @@
   </header>
 
   <nav class="max-w-6xl mx-auto px-4 mt-4" role="tablist" aria-label="Pricing sections">
-    <div class="inline-flex rounded-[var(--radius-full)] bg-[var(--c-surface-2)] p-1 shadow-sm">
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+    <div class="inline-flex rounded-[var(--radius-full)] bg-[var(--c-surface-2)] p-1 shadow-sm ring-1 ring-[color:var(--c-surface-3)]/40">
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="true" aria-controls="tab-customer" id="tab-customer-btn" data-tab="customer" data-active="true">
-        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Customer Pricing</span>
+        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Current State</span>
       </button>
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="false" aria-controls="tab-partner" id="tab-partner-btn" data-tab="partner" data-active="false">
-        <i data-lucide="handshake" class="size-4" aria-hidden="true"></i><span>Partner Pricing</span>
+        <i data-lucide="handshake" class="size-4" aria-hidden="true"></i><span>Recast Approach</span>
       </button>
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="false" aria-controls="tab-onboarding" id="tab-onboarding-btn" data-tab="onboarding" data-active="false">
         <i data-lucide="rocket" class="size-4" aria-hidden="true"></i><span>Onboarding</span>
       </button>
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="false" aria-controls="tab-sla" id="tab-sla-btn" data-tab="sla" data-active="false">
-        <i data-lucide="life-buoy" class="size-4" aria-hidden="true"></i><span>Support SLA</span>
+        <i data-lucide="life-buoy" class="size-4" aria-hidden="true"></i><span>Business Impact</span>
       </button>
     </div>
   </nav>
 
   <main id="main" tabindex="-1" class="max-w-6xl mx-auto px-4 py-6">
     <section id="tab-customer" role="tabpanel" aria-labelledby="tab-customer-btn" class="tab-content">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 mb-6 shadow-[var(--shadow-soft)]">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 mb-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
           <div>
             <label for="users" class="font-semibold block mb-2">User count</label>
             <input id="users" name="users" type="number" inputmode="numeric" min="1" value="10"
-              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[var(--c-surface-3)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
+              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
               aria-describedby="users-help" />
             <p id="users-help" class="text-xs text-[var(--c-muted)] mt-1">Enter number of licensed users (minimum 1).</p>
-            <p id="users-error" class="hidden mt-1 text-xs text-red-400" role="alert">Please enter a valid user count (1 or more).</p>
+            <p id="users-error" class="hidden mt-1 text-xs text-red-300" role="alert">Please enter a valid user count (1 or more).</p>
           </div>
           <div>
             <label for="term" class="font-semibold block mb-2">Contract Term</label>
             <select id="term" name="term"
-              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[var(--c-surface-3)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
+              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
               <option value="Monthly">Monthly</option>
               <option value="Annual" selected>Annual</option>
             </select>
@@ -99,7 +101,7 @@
           </div>
         </form>
 
-        <div class="flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between border-t border-[var(--c-surface-3)] pt-4">
+        <div class="flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between border-t border-[color:var(--c-surface-3)]/50 pt-4">
           <div>
             <p class="text-[var(--c-muted)]">Base ARR</p>
             <p id="baseArr" class="text-2xl font-bold tracking-tight">$0.00</p>
@@ -111,7 +113,7 @@
         </div>
       </div>
 
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
         <div class="overflow-x-auto -mx-2 sm:mx-0">
           <table class="w-full text-left border-collapse min-w-[560px]">
@@ -124,7 +126,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-[var(--c-surface-3)]">
+              <tr class="border-t border-[color:var(--c-surface-3)]/50">
                 <td class="py-2">Application Workspace</td>
                 <td id="custUsers">0</td>
                 <td id="custBase">$0.00</td>
@@ -137,7 +139,7 @@
     </section>
 
     <section id="tab-partner" role="tabpanel" aria-labelledby="tab-partner-btn" class="tab-content hidden">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] mb-6">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] mb-6 ring-1 ring-[color:var(--c-surface-3)]/40">
         <h2 class="text-lg font-semibold mb-4">Partner Quote (Per Line Item)</h2>
         <div class="overflow-x-auto -mx-2 sm:mx-0">
           <table class="w-full text-left border-collapse min-w-[760px]">
@@ -153,14 +155,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-[var(--c-surface-3)]">
+              <tr class="border-t border-[color:var(--c-surface-3)]/50">
                 <td>Application Workspace</td>
                 <td id="partnerUsers">0</td>
                 <td id="partnerMsrp">$0.00</td>
                 <td>30%</td>
                 <td id="partnerMargin">$0.00</td>
                 <td id="partnerPrice">$0.00</td>
-                <td id="salesCommission" class="font-semibold text-red-400">$0.00</td>
+                <td id="salesCommission" class="font-semibold text-red-300">$0.00</td>
               </tr>
             </tbody>
           </table>
@@ -169,7 +171,7 @@
     </section>
 
     <section id="tab-onboarding" role="tabpanel" aria-labelledby="tab-onboarding-btn" class="tab-content hidden">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <h2 class="text-lg font-semibold mb-2">Recast Onboarding Made Simple</h2>
         <p class="text-[var(--c-text)]/90 mb-2">Moving from Citrix to Azure Virtual Desktop (AVD) has never been easier.</p>
         <p class="text-[var(--c-text)]/90 mb-4">Our Advanced Consultative Onboarding is built to make your transition fast, predictable, and low-stress. You’ll work directly with Recast experts who guide your IT team step-by-step — from environment preparation to AVD configuration and go-live support. Within a few weeks, your environment will be fully optimized for AVD and ready for production use.</p>
@@ -183,21 +185,21 @@
               </tr>
             </thead>
             <tbody class="align-top">
-              <tr class="border-t border-[var(--c-surface-3)]"><td class="py-2">Project Duration</td><td>6–8 Weeks (max 40 consulting hours)</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Go-Live Support Period</td><td>6 Weeks post-configuration (2 hrs/week of SME access)</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Engagement Type</td><td>Advisory-led (Customer executes configurations under Recast guidance)</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Scope of Support</td><td>Migration planning, AVD setup, and operational transition from Citrix</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Availability</td><td>Standard Business Hours (8am–5pm CT/CET)</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Delivery Format</td><td>Remote consultation and documentation support</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Environment Preparation</td><td>Guidance for preparing infrastructure and identity access for AVD</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>AVD Configuration Assistance</td><td>Step-by-step guidance on configuring host pools, session management, and user access</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Policy &amp; Access Advisory</td><td>Consultation on conditional access, identity mapping, and application policies</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Modern Workplace Alignment</td><td>Optimization of AVD deployment for Windows endpoint environments</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Custom Branding (Optional)</td><td>Consultation on workspace look and feel to match corporate standards</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Consultation Deliverables</td><td>Custom configuration guide, training materials, and best-practice documentation</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Acceptance Criteria</td><td>Customer validates readiness for production AVD use following guided implementation</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Dependencies</td><td>Customer provides infrastructure access and participates in scheduled onboarding sessions</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Pricing</td><td>Included in onboarding engagement (non-standalone service)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2">Project Duration</td><td>6–8 Weeks (max 40 consulting hours)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Go-Live Support Period</td><td>6 Weeks post-configuration (2 hrs/week of SME access)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Engagement Type</td><td>Advisory-led (Customer executes configurations under Recast guidance)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Scope of Support</td><td>Migration planning, AVD setup, and operational transition from Citrix</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Availability</td><td>Standard Business Hours (8am–5pm CT/CET)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Delivery Format</td><td>Remote consultation and documentation support</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Environment Preparation</td><td>Guidance for preparing infrastructure and identity access for AVD</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>AVD Configuration Assistance</td><td>Step-by-step guidance on configuring host pools, session management, and user access</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Policy &amp; Access Advisory</td><td>Consultation on conditional access, identity mapping, and application policies</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Modern Workplace Alignment</td><td>Optimization of AVD deployment for Windows endpoint environments</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Custom Branding (Optional)</td><td>Consultation on workspace look and feel to match corporate standards</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Consultation Deliverables</td><td>Custom configuration guide, training materials, and best-practice documentation</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Acceptance Criteria</td><td>Customer validates readiness for production AVD use following guided implementation</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Dependencies</td><td>Customer provides infrastructure access and participates in scheduled onboarding sessions</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Pricing</td><td>Included in onboarding engagement (non-standalone service)</td></tr>
             </tbody>
           </table>
         </div>
@@ -205,7 +207,7 @@
     </section>
 
     <section id="tab-sla" role="tabpanel" aria-labelledby="tab-sla-btn" class="tab-content hidden">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <h2 class="text-lg font-semibold mb-4">Support SLA Comparison</h2>
         <div class="overflow-x-auto -mx-2 sm:mx-0">
           <table class="w-full text-left border-collapse min-w-[560px]">
@@ -217,16 +219,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-[var(--c-surface-3)]"><td class="py-2">Urgent Severity</td><td>1 Business Day</td><td>2 Business Hours</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Normal Severity</td><td>2 Business Days</td><td>4 Business Hours</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Low Severity</td><td>3 Business Days</td><td>8 Business Hours</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Availability</td><td>8am – 5pm CT/CET</td><td>24/7</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Support Hours</td><td>Unlimited</td><td>Unlimited</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Dedicated CSM</td><td>✔</td><td>✔</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Environment Audit</td><td>—</td><td>1× / year</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Configuration Audit</td><td>—</td><td>1× / year</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Upgrade Assistance</td><td>—</td><td>2× / year</td></tr>
-              <tr class="border-t border-[var(--c-surface-3)]"><td>Pricing</td><td>Included</td><td>+20% ARR (min $6,000)</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2">Urgent Severity</td><td>1 Business Day</td><td>2 Business Hours</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Normal Severity</td><td>2 Business Days</td><td>4 Business Hours</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Low Severity</td><td>3 Business Days</td><td>8 Business Hours</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Availability</td><td>8am – 5pm CT/CET</td><td>24/7</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Support Hours</td><td>Unlimited</td><td>Unlimited</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Dedicated CSM</td><td>✔</td><td>✔</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Environment Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Configuration Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Upgrade Assistance</td><td>—</td><td>2× / year</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Pricing</td><td>Included</td><td>+20% ARR (min $6,000)</td></tr>
             </tbody>
           </table>
         </div>
@@ -235,7 +237,7 @@
   </main>
 
   <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-4 right-4 z-50 hidden">
-    <div class="rounded-[var(--radius-lg)] bg-[var(--c-surface)] px-4 py-3 shadow-[var(--shadow-soft)] text-sm flex items-center gap-2">
+    <div class="rounded-[var(--radius-lg)] bg-[var(--c-surface)] px-4 py-3 shadow-[var(--shadow-soft)] text-sm flex items-center gap-2 ring-1 ring-[color:var(--c-surface-3)]/40">
       <i data-lucide="check" class="size-4" aria-hidden="true"></i>
       <span id="toast-msg">Copied to clipboard</span>
     </div>
@@ -252,11 +254,11 @@
           set('--c-bg', guide.colors.background);
           set('--c-surface', guide.colors.surface);
           set('--c-surface-2', guide.colors.surface2 || guide.colors.surface);
-          set('--c-surface-3', guide.colors.surface3 || '#374151');
-          set('--c-text', guide.colors.text);
-          set('--c-muted', guide.colors.muted);
-          set('--c-primary', guide.colors.primary);
-          set('--c-primary-contrast', guide.colors.onPrimary || '#111827');
+          set('--c-surface-3', guide.colors.surface3 || '#8085C7');
+          set('--c-text', guide.colors.text || '#FFFFFF');
+          set('--c-muted', guide.colors.muted || '#DFE0F1');
+          set('--c-primary', guide.colors.primary || '#F05928');
+          set('--c-primary-contrast', guide.colors.onPrimary || '#FFFFFF');
         }
         if (guide.fontFamily) set('--font-sans', guide.fontFamily);
         if (guide.radius) {
