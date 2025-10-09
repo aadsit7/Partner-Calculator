@@ -3,204 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Application Workspace Pricing</title>
+  <title>Recast Pricing Calculator</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { margin:0; background:#0b0f14; color:#e5e7eb; font:16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto }
-    .wrap { max-width:960px; margin:0 auto; padding:20px }
-    .card { background:#111827; border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:0 2px 6px rgba(0,0,0,0.3) }
-    h1, h2 { margin:0 0 12px; font-size:20px }
-    label { font-weight:600; display:block; margin-bottom:6px }
-    input, select { width:100%; padding:10px; border-radius:8px; background:#1f2937; color:#fff; border:1px solid #374151 }
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px }
-    .tabs { display:flex; margin-bottom:12px; }
-    .tab { flex:1; padding:12px; text-align:center; background:#1f2937; cursor:pointer; border-radius:8px 8px 0 0 }
-    .tab.active { background:#2563eb }
-    .content { display:none }
-    .content.active { display:block }
-    .price-grid { display:grid; grid-template-columns:1fr auto; gap:8px; margin-top:16px }
-    .price-grid div { padding:6px 0; border-bottom:1px dotted #374151 }
-    .total { font-weight:700; font-size:18px }
-    .expand-toggle { cursor:pointer; font-size:14px; color:#60a5fa; margin-top:8px }
-    .entitlements { display:none; margin-top:10px; font-size:14px; line-height:1.6 }
-    .entitlements div { margin:4px 0 }
-    .right { text-align:right }
-    .note { color:#9ca3af; font-size:13px; margin-top:10px }
-    .stamp { font-size:11px; color:#555; margin-top:40px; text-align:center }
-    table { width:100%; border-collapse:collapse; margin-top:16px }
-    th, td { padding:8px 12px; border-bottom:1px solid #374151; text-align:left }
-    th { background:#1f2937 }
-    noscript { display:block; background:#ef4444; color:#fff; padding:10px; text-align:center; font-weight:bold }
+    :root {
+      color-scheme: dark;
+    }
   </style>
 </head>
-<body>
-<noscript>This calculator requires JavaScript to function properly.</noscript>
-<div class="wrap">
-  <div class="card">
-    <h1>Application Workspace Pricing</h1>
-    <div class="grid">
-      <div>
-        <label for="users">User count</label>
-        <input type="number" id="users" min="1" value="10" />
-      </div>
-      <div>
-        <label for="term">Term</label>
-        <select id="term">
-          <option value="Monthly">Month-to-Month</option>
-          <option value="Annual" selected>Annual</option>
-          <option value="3-Year">3-Year</option>
-          <option value="5-Year">5-Year</option>
-        </select>
-      </div>
-    </div>
-    <div class="expand-toggle" onclick="toggleEntitlements()">View included entitlements ▾</div>
-    <div class="entitlements" id="entitlementList">
-      <div><strong>Designed to give every customer the essentials to deliver and manage applications securely:</strong></div>
-      <div>• Release & Patch – Always up-to-date applications with automated patch management.</div>
-      <div>• Access Manager – Centralized control of user and app access.</div>
-      <div>• SaaS Hosting – Cloud-hosted service with high availability.</div>
-    </div>
+<body class="bg-[#0b0f14] text-gray-100 min-h-screen font-sans">
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <header class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-yellow-400">Recast Pricing Calculator</h1>
+      <button class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-full flex items-center gap-2">
+        <i data-lucide="mail"></i> Copy Email
+      </button>
+    </header>
+    <p class="text-gray-400 mb-6">Estimate only. Not a formal quote.</p>
+
+    <nav class="flex space-x-2 mb-6">
+      <button class="tab-btn active" data-tab="customer">Customer Pricing</button>
+      <button class="tab-btn" data-tab="partner">Partner Pricing</button>
+      <button class="tab-btn" data-tab="sla">Support SLA</button>
+    </nav>
+
+    <main>
+      <!-- CUSTOMER TAB -->
+      <section id="tab-customer" class="tab-content block">
+        <div class="bg-[#111827] rounded-2xl p-6 mb-6 shadow">
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="font-semibold block mb-2">User count</label>
+              <input id="users" type="number" min="1" value="10" class="w-full bg-[#1f2937] border border-gray-700 rounded-lg px-3 py-2 text-white" />
+            </div>
+            <div>
+              <label class="font-semibold block mb-2">Contract Term</label>
+              <select id="term" class="w-full bg-[#1f2937] border border-gray-700 rounded-lg px-3 py-2 text-white">
+                <option value="Monthly">Monthly</option>
+                <option value="Annual" selected>Annual</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+            <div>
+              <p class="text-gray-400">Base ARR</p>
+              <p id="baseArr" class="text-2xl font-bold">$0.00</p>
+            </div>
+            <div>
+              <p class="text-gray-400">Total Contract Value</p>
+              <p id="totalContract" class="text-2xl font-bold text-yellow-400">$0.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[#111827] rounded-2xl p-6 shadow">
+          <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
+          <table class="w-full text-left border-collapse">
+            <thead class="text-gray-400 text-sm">
+              <tr>
+                <th class="pb-2">Product</th>
+                <th class="pb-2">Users</th>
+                <th class="pb-2">Base ARR</th>
+                <th class="pb-2">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-gray-700">
+                <td class="py-2">Application Workspace</td>
+                <td id="custUsers">0</td>
+                <td id="custBase">$0.00</td>
+                <td id="custTotal">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PARTNER TAB -->
+      <section id="tab-partner" class="tab-content hidden">
+        <div class="bg-[#111827] rounded-2xl p-6 shadow mb-6">
+          <h2 class="text-lg font-semibold mb-4">Partner Quote (Per Line Item)</h2>
+          <table class="w-full text-left border-collapse">
+            <thead class="text-gray-400 text-sm">
+              <tr>
+                <th class="pb-2">Product</th>
+                <th class="pb-2">Users</th>
+                <th class="pb-2">MSRP (List)</th>
+                <th class="pb-2">Net New Margin %</th>
+                <th class="pb-2">Net New Margin $</th>
+                <th class="pb-2">Net New Partner Price</th>
+                <th class="pb-2">Sales Rep Commission (10%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-gray-700">
+                <td>Application Workspace</td>
+                <td id="partnerUsers">0</td>
+                <td id="partnerMsrp">$0.00</td>
+                <td>30%</td>
+                <td id="partnerMargin">$0.00</td>
+                <td id="partnerPrice">$0.00</td>
+                <td id="salesCommission" class="text-red-400 font-semibold">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SUPPORT SLA TAB -->
+      <section id="tab-sla" class="tab-content hidden">
+        <div class="bg-[#111827] rounded-2xl p-6 shadow">
+          <h2 class="text-lg font-semibold mb-4">Support SLA Comparison</h2>
+          <table class="w-full text-left border-collapse">
+            <thead class="text-gray-400 text-sm">
+              <tr>
+                <th class="pb-2">Support Level</th>
+                <th class="pb-2">Basic</th>
+                <th class="pb-2">Premium</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-gray-700"><td>Urgent Severity</td><td>1 Business Day</td><td>2 Business Hours</td></tr>
+              <tr class="border-t border-gray-700"><td>Normal Severity</td><td>2 Business Days</td><td>4 Business Hours</td></tr>
+              <tr class="border-t border-gray-700"><td>Low Severity</td><td>3 Business Days</td><td>8 Business Hours</td></tr>
+              <tr class="border-t border-gray-700"><td>Availability</td><td>8am – 5pm CT/CET</td><td>24/7</td></tr>
+              <tr class="border-t border-gray-700"><td>Support Hours</td><td>Unlimited</td><td>Unlimited</td></tr>
+              <tr class="border-t border-gray-700"><td>Dedicated CSM</td><td>✔</td><td>✔</td></tr>
+              <tr class="border-t border-gray-700"><td>Environment Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-gray-700"><td>Configuration Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-gray-700"><td>Upgrade Assistance</td><td>—</td><td>2× / year</td></tr>
+              <tr class="border-t border-gray-700"><td>Pricing</td><td>Included</td><td>+20% ARR (min $6,000)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <div class="card">
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('quote')">Customer Pricing</div>
-      <div class="tab" onclick="switchTab('partner')">Partner Margin</div>
-    </div>
+  <script>
+    const STATE = { users: 10, term: 'Annual' };
 
-    <div id="quote" class="content active">
-      <h2>Quote</h2>
-      <div class="price-grid">
-        <div>Per-user monthly (effective)</div><div id="perUser">—</div>
-        <div>User count</div><div id="userQty">—</div>
-        <div class="total">Total monthly (effective)</div><div class="total" id="totalMonthly">—</div>
-        <div>Total per term</div><div id="totalFull">—</div>
-      </div>
-    </div>
+    const PRICING = {
+      Monthly: { perUser: 25, months: 1 },
+      Annual: { perUser: 250, months: 12 }
+    };
 
-    <div id="partner" class="content">
-      <h2>Partner Margin</h2>
-      <div class="tabs">
-        <div class="tab active" onclick="switchPartner('new')">Net New</div>
-        <div class="tab" onclick="switchPartner('renewal')">Renewal</div>
-      </div>
+    function fmt(v) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
+    }
 
-      <div id="partnerNew" class="content active">
-        <table>
-          <thead>
-            <tr><th>Users</th><th>List Price</th><th>Partner Price</th><th>Total</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="pnewUsers">—</td>
-              <td id="pnewList">—</td>
-              <td id="pnewPrice">—</td>
-              <td id="pnewTotal">—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    function calc() {
+      const users = parseInt(document.getElementById('users').value) || 0;
+      const term = document.getElementById('term').value;
+      const p = PRICING[term];
+      const baseArr = p.perUser * users;
+      const totalContract = term === 'Monthly' ? baseArr : baseArr;
+      const margin = totalContract * 0.3;
+      const partnerPrice = totalContract - margin;
+      const salesCommission = totalContract * 0.1;
 
-      <div id="partnerRenewal" class="content">
-        <table>
-          <thead>
-            <tr><th>Users</th><th>List Price</th><th>Partner Price</th><th>Total</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="prenewUsers">—</td>
-              <td id="prenewList">—</td>
-              <td id="prenewPrice">—</td>
-              <td id="prenewTotal">—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+      document.getElementById('baseArr').textContent = fmt(baseArr);
+      document.getElementById('totalContract').textContent = fmt(totalContract);
+      document.getElementById('custUsers').textContent = users;
+      document.getElementById('custBase').textContent = fmt(baseArr);
+      document.getElementById('custTotal').textContent = fmt(totalContract);
+      document.getElementById('partnerUsers').textContent = users;
+      document.getElementById('partnerMsrp').textContent = fmt(totalContract);
+      document.getElementById('partnerMargin').textContent = fmt(margin);
+      document.getElementById('partnerPrice').textContent = fmt(partnerPrice);
+      document.getElementById('salesCommission').textContent = fmt(salesCommission);
+    }
 
-  <div class="stamp">Build 2025-09-08</div>
-</div>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('bg-yellow-400', 'text-black', 'active'));
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('bg-yellow-400', 'text-black', 'active');
+      document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    }
 
-<script>
-const PRICING = {
-  "Monthly":     { base: 2.95, rp: 1.0, am: 0.5, saas: 1.1, months: 1 },
-  "Annual":      { base: 32.2 / 12, rp: 11.0 / 12, am: 5.32 / 12, saas: 13.2 / 12, months: 12 },
-  "3-Year":      { base: 90.0 / 36, rp: 31.0 / 36, am: 15.0 / 36, saas: 39.6 / 36, months: 36 },
-  "5-Year":      { base: 147.7 / 60, rp: 51.0 / 60, am: 25.5 / 60, saas: 66.0 / 60, months: 60 }
-};
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.add('px-4', 'py-2', 'rounded-full', 'bg-[#1f2937]', 'hover:bg-[#374151]', 'transition', 'text-sm');
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
 
-function getVolumeDiscount(users) {
-  if (users >= 25000) return 0.30;
-  if (users >= 10000) return 0.25;
-  if (users >= 5000)  return 0.20;
-  if (users >= 1000)  return 0.15;
-  if (users >= 500)   return 0.10;
-  if (users >= 100)   return 0.05;
-  return 0.00;
-}
+    document.getElementById('users').addEventListener('input', calc);
+    document.getElementById('term').addEventListener('change', calc);
 
-function fmt(n) {
-  return n === null || isNaN(n) ? "—" : new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(n);
-}
-
-function calc() {
-  const users = parseInt(document.getElementById("users").value) || 0;
-  const term = document.getElementById("term").value;
-  const p = PRICING[term];
-  const monthlyPerUser = p.base + p.rp + (p.am || 0) + p.saas;
-
-  const volumePct = getVolumeDiscount(users);
-  const discountedUnit = monthlyPerUser * (1 - volumePct);
-  const totalMonthly = discountedUnit * users;
-  const totalFull = totalMonthly * p.months;
-
-  const effectiveUnit = totalMonthly / users;
-
-  document.getElementById("perUser").textContent = fmt(effectiveUnit);
-  document.getElementById("userQty").textContent = users;
-  document.getElementById("totalMonthly").textContent = fmt(totalMonthly);
-  document.getElementById("totalFull").textContent = fmt(totalFull);
-
-  const msrp = totalFull;
-  const marginNew = msrp * 0.30;
-  const partnerCostNew = msrp - marginNew;
-  const marginRenew = msrp * 0.15;
-  const partnerCostRenew = msrp - marginRenew;
-
-  document.getElementById("pnewUsers").textContent = users;
-  document.getElementById("pnewList").textContent = fmt(msrp);
-  document.getElementById("pnewPrice").textContent = fmt(partnerCostNew);
-  document.getElementById("pnewTotal").textContent = fmt(partnerCostNew);
-
-  document.getElementById("prenewUsers").textContent = users;
-  document.getElementById("prenewList").textContent = fmt(msrp);
-  document.getElementById("prenewPrice").textContent = fmt(partnerCostRenew);
-  document.getElementById("prenewTotal").textContent = fmt(partnerCostRenew);
-}
-
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-  document.querySelector(`.tab[onclick*='${id}']`).classList.add('active');
-  document.getElementById(id).classList.add('active');
-}
-
-function switchPartner(view) {
-  document.getElementById("partnerNew").classList.remove("active");
-  document.getElementById("partnerRenewal").classList.remove("active");
-  document.querySelectorAll("#partner .tabs .tab").forEach(t => t.classList.remove("active"));
-  document.getElementById(view === 'new' ? "partnerNew" : "partnerRenewal").classList.add("active");
-  document.querySelector(`#partner .tabs .tab[onclick*='${view}']`).classList.add("active");
-}
-
-function toggleEntitlements() {
-  const el = document.getElementById("entitlementList");
-  el.style.display = el.style.display === "block" ? "none" : "block";
-}
-
-document.getElementById("users").addEventListener("input", calc);
-document.getElementById("term").addEventListener("change", calc);
-document.addEventListener("DOMContentLoaded", calc);
-</script>
+    lucide.createIcons();
+    calc();
+  </script>
 </body>
 </html>
