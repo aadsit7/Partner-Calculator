@@ -10,10 +10,11 @@
   <style>
     :root {
       color-scheme: dark;
-      /* Branding palette aligned to screenshot */
-      --c-bg: #1F289C;
-      --c-surface: #3139A4;
-      --c-surface-2: #2C35A2;
+      /* Exact background sampled from the provided screenshot (RGB 28,40,156) */
+      --c-bg: #1C289C;
+      /* Harmonized surfaces for contrast on the brand background */
+      --c-surface: #2F39A3;
+      --c-surface-2: #2A35A1;
       --c-surface-3: #8085C7;
       --c-text: #FFFFFF;
       --c-muted: #DFE0F1;
@@ -24,6 +25,7 @@
       --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
     }
+    /* Graceful fallback if Tailwind fails to load */
     body:not(.tw-ready) {
       background: var(--c-bg);
       color: var(--c-text);
@@ -33,6 +35,7 @@
     }
   </style>
 </head>
+<body class="min-h-screen bg-[var(--c-bg)] text-[var(--c-text)]">
   <div id="cdn-alert" role="alert" aria-live="polite" class="hidden fixed inset-x-0 top-0 z-40 mx-auto max-w-3xl rounded-b-[var(--radius-lg)] bg-[var(--c-surface)]/95 backdrop-blur px-4 py-3 shadow-md">
     <div class="flex items-center gap-3">
       <span class="inline-flex size-5 items-center justify-center rounded-full bg-[var(--c-primary)]/20">
@@ -83,7 +86,7 @@
         <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
           <div>
             <label for="users" class="font-semibold block mb-2">User count</label>
-            <input id="users" name="users" type="number" inputmode="numeric" min="1" value="500"
+            <input id="users" name="users" type="number" inputmode="numeric" min="1" value="10"
               class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
               aria-describedby="users-help" />
             <p id="users-help" class="text-xs text-[var(--c-muted)] mt-1">Enter number of licensed users (minimum 1).</p>
@@ -298,15 +301,15 @@
 
     const STATE = {
       users: 10,
-      term: 'Monthly', // default aligns with examples
+      term: 'Monthly',
       totals: {
-        baseArr: 0,           // Annualized revenue (ARR)
-        totalContract: 0,     // Depends on term: monthly or annual
+        baseArr: 0,
+        totalContract: 0,
         margin: 0,
         partnerPrice: 0,
         salesCommission: 0
       },
-      perUserMonthly: 4.00    // derived from tiering
+      perUserMonthly: 4.00
     };
 
     function getTierPricePerUserMonthly(users) {
@@ -316,7 +319,7 @@
       if (users <= 9999) return 3.00;
       if (users <= 24999) return 2.50;
       if (users <= 49999) return 2.00;
-      return 1.50; // 50,000+ users: ~$1.50 per user
+      return 1.50;
     }
 
     function formatCurrency(v) {
@@ -333,7 +336,7 @@
       const monthlyCost = STATE.perUserMonthly * STATE.users;
       const annualCost = monthlyCost * 12;
 
-      const baseArr = annualCost; // ARR is always annualized
+      const baseArr = annualCost;
       const totalContract = STATE.term === 'Annual' ? annualCost : monthlyCost;
 
       const margin = totalContract * 0.30;
