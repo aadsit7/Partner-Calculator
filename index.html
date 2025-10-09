@@ -4,72 +4,129 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Recast Pricing Calculator</title>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Instantly estimate customer and partner pricing with an accessible, brand-aware calculator." />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="https://cdn.tailwindcss.com" defer></script>
   <style>
     :root {
       color-scheme: dark;
+      --c-bg: #0b0f14;
+      --c-surface: #111827;
+      --c-surface-2: #1f2937;
+      --c-surface-3: #374151;
+      --c-text: #e5e7eb;
+      --c-muted: #9ca3af;
+      --c-primary: #f5b301;
+      --c-primary-contrast: #111827;
+      --radius-lg: 1rem;
+      --radius-full: 9999px;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
+    }
+    /* Graceful degradation if Tailwind fails: keep layout readable */
+    body:not(.tw-ready) {
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 16px;
     }
   </style>
 </head>
-<body class="bg-[#0b0f14] text-gray-100 min-h-screen font-sans">
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <header class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-yellow-400">Recast Pricing Calculator</h1>
-      <button class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-full flex items-center gap-2">
-        <i data-lucide="mail"></i> Copy Email
+<body class="bg-[var(--c-bg)] text-[var(--c-text)] min-h-screen font-sans antialiased selection:bg-[var(--c-primary)] selection:text-[var(--c-primary-contrast)]">
+  <a href="#main" class="absolute left-2 top-2 z-50 rounded-[var(--radius-full)] px-4 py-2 bg-[var(--c-primary)] text-[var(--c-primary-contrast)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--c-primary)] focus:ring-offset-[var(--c-bg)]">Skip to content</a>
+
+  <div id="cdn-alert" role="alert" aria-live="polite" class="hidden fixed inset-x-0 top-0 z-40 mx-auto max-w-3xl rounded-b-[var(--radius-lg)] bg-[var(--c-surface)]/95 backdrop-blur px-4 py-3 shadow-md">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex size-5 items-center justify-center rounded-full bg-[var(--c-primary)]/20">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" class="block"><path fill="currentColor" d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2z"/></svg>
+      </span>
+      <p class="text-sm"><strong>Heads up:</strong> Some styles or icons may look different if CDNs are blocked. The calculator still works.</p>
+    </div>
+  </div>
+
+  <header class="max-w-6xl mx-auto px-4 pt-8 pb-4">
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img id="brand-logo" alt="Brand logo" src="" class="hidden h-8 w-auto" />
+        <h1 id="brand-title" class="text-2xl sm:text-3xl font-bold tracking-[-0.02em]">
+          Recast Pricing Calculator
+        </h1>
+      </div>
+      <button id="copy-email" class="inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 bg-[var(--c-primary)] text-[var(--c-primary-contrast)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--c-primary)] focus:ring-offset-[var(--c-bg)] transition text-sm font-medium">
+        <i data-lucide="mail" aria-hidden="true" class="size-4"></i>
+        <span>Copy Email</span>
       </button>
-    </header>
-    <p class="text-gray-400 mb-6">Estimate only. Not a formal quote.</p>
+    </div>
+    <p class="mt-2 text-sm text-[var(--c-muted)]">Estimate only. Not a formal quote.</p>
+  </header>
 
-    <nav class="flex space-x-2 mb-6">
-      <button class="tab-btn active" data-tab="customer">Customer Pricing</button>
-      <button class="tab-btn" data-tab="partner">Partner Pricing</button>
-      <button class="tab-btn" data-tab="sla">Support SLA</button>
-    </nav>
+  <nav class="max-w-6xl mx-auto px-4 mt-4" role="tablist" aria-label="Pricing sections">
+    <div class="inline-flex rounded-[var(--radius-full)] bg-[var(--c-surface-2)] p-1 shadow-sm">
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+              role="tab" aria-selected="true" aria-controls="tab-customer" id="tab-customer-btn" data-tab="customer" data-active="true">
+        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Customer Pricing</span>
+      </button>
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+              role="tab" aria-selected="false" aria-controls="tab-partner" id="tab-partner-btn" data-tab="partner" data-active="false">
+        <i data-lucide="handshake" class="size-4" aria-hidden="true"></i><span>Partner Pricing</span>
+      </button>
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+              role="tab" aria-selected="false" aria-controls="tab-sla" id="tab-sla-btn" data-tab="sla" data-active="false">
+        <i data-lucide="life-buoy" class="size-4" aria-hidden="true"></i><span>Support SLA</span>
+      </button>
+    </div>
+  </nav>
 
-    <main>
-      <!-- CUSTOMER TAB -->
-      <section id="tab-customer" class="tab-content block">
-        <div class="bg-[#111827] rounded-2xl p-6 mb-6 shadow">
-          <div class="grid md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label class="font-semibold block mb-2">User count</label>
-              <input id="users" type="number" min="1" value="10" class="w-full bg-[#1f2937] border border-gray-700 rounded-lg px-3 py-2 text-white" />
-            </div>
-            <div>
-              <label class="font-semibold block mb-2">Contract Term</label>
-              <select id="term" class="w-full bg-[#1f2937] border border-gray-700 rounded-lg px-3 py-2 text-white">
-                <option value="Monthly">Monthly</option>
-                <option value="Annual" selected>Annual</option>
-              </select>
-            </div>
+  <main id="main" tabindex="-1" class="max-w-6xl mx-auto px-4 py-6">
+    <section id="tab-customer" role="tabpanel" aria-labelledby="tab-customer-btn" class="tab-content">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 mb-6 shadow-[var(--shadow-soft)]">
+        <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
+          <div>
+            <label for="users" class="font-semibold block mb-2">User count</label>
+            <input id="users" name="users" type="number" inputmode="numeric" min="1" value="10"
+              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[var(--c-surface-3)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
+              aria-describedby="users-help" />
+            <p id="users-help" class="text-xs text-[var(--c-muted)] mt-1">Enter number of licensed users (minimum 1).</p>
+            <p id="users-error" class="hidden mt-1 text-xs text-red-400" role="alert">Please enter a valid user count (1 or more).</p>
           </div>
-          <div class="flex justify-between items-center border-t border-gray-700 pt-4">
-            <div>
-              <p class="text-gray-400">Base ARR</p>
-              <p id="baseArr" class="text-2xl font-bold">$0.00</p>
-            </div>
-            <div>
-              <p class="text-gray-400">Total Contract Value</p>
-              <p id="totalContract" class="text-2xl font-bold text-yellow-400">$0.00</p>
-            </div>
+          <div>
+            <label for="term" class="font-semibold block mb-2">Contract Term</label>
+            <select id="term" name="term"
+              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[var(--c-surface-3)] focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
+              <option value="Monthly">Monthly</option>
+              <option value="Annual" selected>Annual</option>
+            </select>
+            <p class="text-xs text-[var(--c-muted)] mt-1">Annual term reflects yearly pricing. Monthly bills month-to-month.</p>
+          </div>
+        </form>
+
+        <div class="flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between border-t border-[var(--c-surface-3)] pt-4">
+          <div>
+            <p class="text-[var(--c-muted)]">Base ARR</p>
+            <p id="baseArr" class="text-2xl font-bold tracking-tight">$0.00</p>
+          </div>
+          <div>
+            <p class="text-[var(--c-muted)]">Total Contract Value</p>
+            <p id="totalContract" class="text-2xl font-bold tracking-tight text-[var(--c-primary)]">$0.00</p>
           </div>
         </div>
+      </div>
 
-        <div class="bg-[#111827] rounded-2xl p-6 shadow">
-          <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
-          <table class="w-full text-left border-collapse">
-            <thead class="text-gray-400 text-sm">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+        <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="w-full text-left border-collapse min-w-[560px]">
+            <thead class="text-[var(--c-muted)] text-sm">
               <tr>
-                <th class="pb-2">Product</th>
-                <th class="pb-2">Users</th>
-                <th class="pb-2">Base ARR</th>
-                <th class="pb-2">Total</th>
+                <th class="pb-2 font-medium">Product</th>
+                <th class="pb-2 font-medium">Users</th>
+                <th class="pb-2 font-medium">Base ARR</th>
+                <th class="pb-2 font-medium">Total</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-gray-700">
+              <tr class="border-t border-[var(--c-surface-3)]">
                 <td class="py-2">Application Workspace</td>
                 <td id="custUsers">0</td>
                 <td id="custBase">$0.00</td>
@@ -78,120 +135,308 @@
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- PARTNER TAB -->
-      <section id="tab-partner" class="tab-content hidden">
-        <div class="bg-[#111827] rounded-2xl p-6 shadow mb-6">
-          <h2 class="text-lg font-semibold mb-4">Partner Quote (Per Line Item)</h2>
-          <table class="w-full text-left border-collapse">
-            <thead class="text-gray-400 text-sm">
+    <section id="tab-partner" role="tabpanel" aria-labelledby="tab-partner-btn" class="tab-content hidden">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] mb-6">
+        <h2 class="text-lg font-semibold mb-4">Partner Quote (Per Line Item)</h2>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="w-full text-left border-collapse min-w-[760px]">
+            <thead class="text-[var(--c-muted)] text-sm">
               <tr>
-                <th class="pb-2">Product</th>
-                <th class="pb-2">Users</th>
-                <th class="pb-2">MSRP (List)</th>
-                <th class="pb-2">Net New Margin %</th>
-                <th class="pb-2">Net New Margin $</th>
-                <th class="pb-2">Net New Partner Price</th>
-                <th class="pb-2">Sales Rep Commission (10%)</th>
+                <th class="pb-2 font-medium">Product</th>
+                <th class="pb-2 font-medium">Users</th>
+                <th class="pb-2 font-medium">MSRP (List)</th>
+                <th class="pb-2 font-medium">Net New Margin %</th>
+                <th class="pb-2 font-medium">Net New Margin $</th>
+                <th class="pb-2 font-medium">Net New Partner Price</th>
+                <th class="pb-2 font-medium">Sales Rep Commission (10%)</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-gray-700">
+              <tr class="border-t border-[var(--c-surface-3)]">
                 <td>Application Workspace</td>
                 <td id="partnerUsers">0</td>
                 <td id="partnerMsrp">$0.00</td>
                 <td>30%</td>
                 <td id="partnerMargin">$0.00</td>
                 <td id="partnerPrice">$0.00</td>
-                <td id="salesCommission" class="text-red-400 font-semibold">$0.00</td>
+                <td id="salesCommission" class="font-semibold text-red-400">$0.00</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- SUPPORT SLA TAB -->
-      <section id="tab-sla" class="tab-content hidden">
-        <div class="bg-[#111827] rounded-2xl p-6 shadow">
-          <h2 class="text-lg font-semibold mb-4">Support SLA Comparison</h2>
-          <table class="w-full text-left border-collapse">
-            <thead class="text-gray-400 text-sm">
+    <section id="tab-sla" role="tabpanel" aria-labelledby="tab-sla-btn" class="tab-content hidden">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+        <h2 class="text-lg font-semibold mb-4">Support SLA Comparison</h2>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="w-full text-left border-collapse min-w-[560px]">
+            <thead class="text-[var(--c-muted)] text-sm">
               <tr>
-                <th class="pb-2">Support Level</th>
-                <th class="pb-2">Basic</th>
-                <th class="pb-2">Premium</th>
+                <th class="pb-2 font-medium">Support Level</th>
+                <th class="pb-2 font-medium">Basic</th>
+                <th class="pb-2 font-medium">Premium</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-gray-700"><td>Urgent Severity</td><td>1 Business Day</td><td>2 Business Hours</td></tr>
-              <tr class="border-t border-gray-700"><td>Normal Severity</td><td>2 Business Days</td><td>4 Business Hours</td></tr>
-              <tr class="border-t border-gray-700"><td>Low Severity</td><td>3 Business Days</td><td>8 Business Hours</td></tr>
-              <tr class="border-t border-gray-700"><td>Availability</td><td>8am – 5pm CT/CET</td><td>24/7</td></tr>
-              <tr class="border-t border-gray-700"><td>Support Hours</td><td>Unlimited</td><td>Unlimited</td></tr>
-              <tr class="border-t border-gray-700"><td>Dedicated CSM</td><td>✔</td><td>✔</td></tr>
-              <tr class="border-t border-gray-700"><td>Environment Audit</td><td>—</td><td>1× / year</td></tr>
-              <tr class="border-t border-gray-700"><td>Configuration Audit</td><td>—</td><td>1× / year</td></tr>
-              <tr class="border-t border-gray-700"><td>Upgrade Assistance</td><td>—</td><td>2× / year</td></tr>
-              <tr class="border-t border-gray-700"><td>Pricing</td><td>Included</td><td>+20% ARR (min $6,000)</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td class="py-2">Urgent Severity</td><td>1 Business Day</td><td>2 Business Hours</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Normal Severity</td><td>2 Business Days</td><td>4 Business Hours</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Low Severity</td><td>3 Business Days</td><td>8 Business Hours</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Availability</td><td>8am – 5pm CT/CET</td><td>24/7</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Support Hours</td><td>Unlimited</td><td>Unlimited</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Dedicated CSM</td><td>✔</td><td>✔</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Environment Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Configuration Audit</td><td>—</td><td>1× / year</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Upgrade Assistance</td><td>—</td><td>2× / year</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Pricing</td><td>Included</td><td>+20% ARR (min $6,000)</td></tr>
             </tbody>
           </table>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-4 right-4 z-50 hidden">
+    <div class="rounded-[var(--radius-lg)] bg-[var(--c-surface)] px-4 py-3 shadow-[var(--shadow-soft)] text-sm flex items-center gap-2">
+      <i data-lucide="check" class="size-4" aria-hidden="true"></i>
+      <span id="toast-msg">Copied to clipboard</span>
+    </div>
   </div>
 
   <script>
-    const STATE = { users: 10, term: 'Annual' };
+    // ONE CHANGE FOR BRAND ANALYSIS & APPLICATION:
+    // If a branding style guide object is exposed on window.BRAND_GUIDE (from knowledge files),
+    // this will apply its tokens to CSS variables and logo/title automatically with 100% accuracy mapping.
+    // Expected shape:
+    // {
+    //   name: "Recast",
+    //   logoDataUrl: "data:image/png;base64,...",
+    //   colors: { background, surface, surface2, surface3, text, muted, primary, onPrimary },
+    //   fontFamily: "Inter, ui-sans-serif, system-ui, ...",
+    //   radius: { lg: "1rem", full: "9999px" }
+    // }
+    (function applyBrandingFromGuide() {
+      try {
+        var guide = window.BRAND_GUIDE;
+        if (!guide || typeof guide !== 'object') return;
 
-    const PRICING = {
-      Monthly: { perUser: 25, months: 1 },
-      Annual: { perUser: 250, months: 12 }
-    };
+        var root = document.documentElement;
+        var set = (k, v) => { if (v) root.style.setProperty(k, v); };
 
-    function fmt(v) {
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
-    }
+        if (guide.colors) {
+          set('--c-bg', guide.colors.background);
+          set('--c-surface', guide.colors.surface);
+          set('--c-surface-2', guide.colors.surface2 || guide.colors.surface2 === '' ? guide.colors.surface2 : guide.colors.surface);
+          set('--c-surface-3', guide.colors.surface3 || '#374151');
+          set('--c-text', guide.colors.text);
+          set('--c-muted', guide.colors.muted);
+          set('--c-primary', guide.colors.primary);
+          set('--c-primary-contrast', guide.colors.onPrimary || '#111827');
+        }
+        if (guide.fontFamily) set('--font-sans', guide.fontFamily);
+        if (guide.radius) {
+          if (guide.radius.lg) set('--radius-lg', guide.radius.lg);
+          if (guide.radius.full) set('--radius-full', guide.radius.full);
+        }
+        if (guide.name) {
+          var title = document.getElementById('brand-title');
+          if (title) title.textContent = guide.name + ' Pricing Calculator';
+        }
+        if (guide.logoDataUrl) {
+          var logo = document.getElementById('brand-logo');
+          if (logo) {
+            logo.src = guide.logoDataUrl;
+            logo.classList.remove('hidden');
+          }
+        }
+      } catch (e) {
+        console.error('Brand guide application error:', e);
+      }
+    })();
 
-    function calc() {
-      const users = parseInt(document.getElementById('users').value) || 0;
-      const term = document.getElementById('term').value;
-      const p = PRICING[term];
-      const baseArr = p.perUser * users;
-      const totalContract = term === 'Monthly' ? baseArr : baseArr;
-      const margin = totalContract * 0.3;
-      const partnerPrice = totalContract - margin;
-      const salesCommission = totalContract * 0.1;
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.classList.add('tw-ready');
 
-      document.getElementById('baseArr').textContent = fmt(baseArr);
-      document.getElementById('totalContract').textContent = fmt(totalContract);
-      document.getElementById('custUsers').textContent = users;
-      document.getElementById('custBase').textContent = fmt(baseArr);
-      document.getElementById('custTotal').textContent = fmt(totalContract);
-      document.getElementById('partnerUsers').textContent = users;
-      document.getElementById('partnerMsrp').textContent = fmt(totalContract);
-      document.getElementById('partnerMargin').textContent = fmt(margin);
-      document.getElementById('partnerPrice').textContent = fmt(partnerPrice);
-      document.getElementById('salesCommission').textContent = fmt(salesCommission);
-    }
+      // CDNs health check (best-effort)
+      setTimeout(function () {
+        var tailwindOk = !!window.tailwind;
+        var lucideOk = !!window.lucide;
+        if (!tailwindOk || !lucideOk) {
+          var alertEl = document.getElementById('cdn-alert');
+          if (alertEl) alertEl.classList.remove('hidden');
+        }
+      }, 400);
 
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('bg-yellow-400', 'text-black', 'active'));
-      document.querySelector(`[data-tab="${tab}"]`).classList.add('bg-yellow-400', 'text-black', 'active');
-      document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
-      document.getElementById(`tab-${tab}`).classList.remove('hidden');
-    }
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.add('px-4', 'py-2', 'rounded-full', 'bg-[#1f2937]', 'hover:bg-[#374151]', 'transition', 'text-sm');
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      initApp();
     });
 
-    document.getElementById('users').addEventListener('input', calc);
-    document.getElementById('term').addEventListener('change', calc);
+    const STATE = {
+      users: 10,
+      term: 'Annual',
+      pricing: {
+        Monthly: { perUser: 25, months: 1 },
+        Annual: { perUser: 250, months: 12 }
+      },
+      totals: {
+        baseArr: 0,
+        totalContract: 0,
+        margin: 0,
+        partnerPrice: 0,
+        salesCommission: 0
+      }
+    };
 
-    lucide.createIcons();
-    calc();
+    function formatCurrency(v) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(v || 0);
+    }
+
+    function validateUsers(n) {
+      var valid = Number.isFinite(n) && n >= 1 && n <= 1000000;
+      return { valid, message: valid ? '' : 'Please enter a valid user count (1 or more).' };
+    }
+
+    function computeTotals() {
+      const p = STATE.pricing[STATE.term];
+      const baseArr = p.perUser * STATE.users;
+      const totalContract = baseArr; // identical currently; hook for future promos
+      const margin = totalContract * 0.30;
+      const partnerPrice = totalContract - margin;
+      const salesCommission = totalContract * 0.10;
+      STATE.totals = { baseArr, totalContract, margin, partnerPrice, salesCommission };
+    }
+
+    function renderSummary() {
+      document.getElementById('baseArr').textContent = formatCurrency(STATE.totals.baseArr);
+      document.getElementById('totalContract').textContent = formatCurrency(STATE.totals.totalContract);
+    }
+
+    function renderCustomerTable() {
+      document.getElementById('custUsers').textContent = String(STATE.users);
+      document.getElementById('custBase').textContent = formatCurrency(STATE.totals.baseArr);
+      document.getElementById('custTotal').textContent = formatCurrency(STATE.totals.totalContract);
+    }
+
+    function renderPartnerTable() {
+      document.getElementById('partnerUsers').textContent = String(STATE.users);
+      document.getElementById('partnerMsrp').textContent = formatCurrency(STATE.totals.totalContract);
+      document.getElementById('partnerMargin').textContent = formatCurrency(STATE.totals.margin);
+      document.getElementById('partnerPrice').textContent = formatCurrency(STATE.totals.partnerPrice);
+      document.getElementById('salesCommission').textContent = formatCurrency(STATE.totals.salesCommission);
+    }
+
+    function renderForm() {
+      var usersInput = document.getElementById('users');
+      var termSelect = document.getElementById('term');
+      if (Number(usersInput.value) !== STATE.users) usersInput.value = STATE.users;
+      if (termSelect.value !== STATE.term) termSelect.value = STATE.term;
+    }
+
+    function renderTabs(active) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const isActive = btn.dataset.tab === active;
+        btn.setAttribute('data-active', String(isActive));
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+      document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+      const panel = document.getElementById('tab-' + active);
+      if (panel) panel.classList.remove('hidden');
+    }
+
+    function renderAll() {
+      computeTotals();
+      renderSummary();
+      renderCustomerTable();
+      renderPartnerTable();
+      renderForm();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      if (!toast || !msg) return;
+      msg.textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 1800);
+    }
+
+    function copyEmailSummary() {
+      const subject = 'Pricing Summary';
+      const lines = [
+        'Recast Pricing Summary',
+        '',
+        'Customer Pricing',
+        `- Users: ${STATE.users}`,
+        `- Term: ${STATE.term}`,
+        `- Base ARR: ${formatCurrency(STATE.totals.baseArr)}`,
+        `- Total Contract Value: ${formatCurrency(STATE.totals.totalContract)}`,
+        '',
+        'Partner Pricing',
+        `- MSRP (List): ${formatCurrency(STATE.totals.totalContract)}`,
+        `- Net New Margin %: 30%`,
+        `- Net New Margin $: ${formatCurrency(STATE.totals.margin)}`,
+        `- Net New Partner Price: ${formatCurrency(STATE.totals.partnerPrice)}`,
+        `- Sales Rep Commission (10%): ${formatCurrency(STATE.totals.salesCommission)}`
+      ];
+      const body = encodeURIComponent(lines.join('\n'));
+      const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
+      try {
+        navigator.clipboard.writeText(lines.join('\n'));
+        showToast('Summary copied to clipboard');
+      } catch (_) {
+        // fallback to mailto open
+        window.location.href = mailto;
+      }
+    }
+
+    function initEvents() {
+      const usersInput = document.getElementById('users');
+      const usersError = document.getElementById('users-error');
+      const termSelect = document.getElementById('term');
+
+      usersInput.addEventListener('input', () => {
+        const n = parseInt(usersInput.value, 10);
+        const { valid, message } = validateUsers(n);
+        if (!valid) {
+          usersError.textContent = message;
+          usersError.classList.remove('hidden');
+          return;
+        }
+        usersError.classList.add('hidden');
+        STATE.users = n;
+        renderAll();
+      });
+
+      termSelect.addEventListener('change', () => {
+        STATE.term = termSelect.value;
+        renderAll();
+      });
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          renderTabs(tab);
+        });
+      });
+
+      document.getElementById('copy-email').addEventListener('click', (e) => {
+        e.preventDefault();
+        copyEmailSummary();
+      });
+    }
+
+    function initApp() {
+      initEvents();
+      renderTabs('customer');
+      renderAll();
+    }
   </script>
 </body>
 </html>
