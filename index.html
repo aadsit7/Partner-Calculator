@@ -23,7 +23,6 @@
       --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
     }
-    /* Graceful degradation if Tailwind fails: keep layout readable */
     body:not(.tw-ready) {
       background: var(--c-bg);
       color: var(--c-text);
@@ -49,9 +48,7 @@
     <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <img id="brand-logo" alt="Brand logo" src="" class="hidden h-8 w-auto" />
-        <h1 id="brand-title" class="text-2xl sm:text-3xl font-bold tracking-[-0.02em]">
-          Recast Pricing Calculator
-        </h1>
+        <h1 id="brand-title" class="text-2xl sm:text-3xl font-bold tracking-[-0.02em]">Recast Pricing Calculator</h1>
       </div>
       <button id="copy-email" class="inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 bg-[var(--c-primary)] text-[var(--c-primary-contrast)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--c-primary)] focus:ring-offset-[var(--c-bg)] transition text-sm font-medium">
         <i data-lucide="mail" aria-hidden="true" class="size-4"></i>
@@ -70,6 +67,10 @@
       <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
               role="tab" aria-selected="false" aria-controls="tab-partner" id="tab-partner-btn" data-tab="partner" data-active="false">
         <i data-lucide="handshake" class="size-4" aria-hidden="true"></i><span>Partner Pricing</span>
+      </button>
+      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
+              role="tab" aria-selected="false" aria-controls="tab-onboarding" id="tab-onboarding-btn" data-tab="onboarding" data-active="false">
+        <i data-lucide="rocket" class="size-4" aria-hidden="true"></i><span>Onboarding</span>
       </button>
       <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/90 hover:bg-[var(--c-surface-3)] transition"
               role="tab" aria-selected="false" aria-controls="tab-sla" id="tab-sla-btn" data-tab="sla" data-active="false">
@@ -170,6 +171,42 @@
       </div>
     </section>
 
+    <section id="tab-onboarding" role="tabpanel" aria-labelledby="tab-onboarding-btn" class="tab-content hidden">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
+        <h2 class="text-lg font-semibold mb-2">Recast Onboarding Made Simple</h2>
+        <p class="text-[var(--c-text)]/90 mb-2">Moving from Citrix to Azure Virtual Desktop (AVD) has never been easier.</p>
+        <p class="text-[var(--c-text)]/90 mb-4">Our Advanced Consultative Onboarding is built to make your transition fast, predictable, and low-stress. You’ll work directly with Recast experts who guide your IT team step-by-step — from environment preparation to AVD configuration and go-live support. Within a few weeks, your environment will be fully optimized for AVD and ready for production use.</p>
+        <h3 class="text-base font-semibold mb-3">Onboarding Services Comparison</h3>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="w-full text-left border-collapse min-w-[640px]">
+            <thead class="text-[var(--c-muted)] text-sm">
+              <tr>
+                <th class="pb-2 font-medium">Onboarding Stage</th>
+                <th class="pb-2 font-medium">Citrix to AVD Transition Onboarding</th>
+              </tr>
+            </thead>
+            <tbody class="align-top">
+              <tr class="border-t border-[var(--c-surface-3)]"><td class="py-2">Project Duration</td><td>6–8 Weeks (max 40 consulting hours)</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Go-Live Support Period</td><td>6 Weeks post-configuration (2 hrs/week of SME access)</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Engagement Type</td><td>Advisory-led (Customer executes configurations under Recast guidance)</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Scope of Support</td><td>Migration planning, AVD setup, and operational transition from Citrix</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Availability</td><td>Standard Business Hours (8am–5pm CT/CET)</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Delivery Format</td><td>Remote consultation and documentation support</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Environment Preparation</td><td>Guidance for preparing infrastructure and identity access for AVD</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>AVD Configuration Assistance</td><td>Step-by-step guidance on configuring host pools, session management, and user access</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Policy &amp; Access Advisory</td><td>Consultation on conditional access, identity mapping, and application policies</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Modern Workplace Alignment</td><td>Optimization of AVD deployment for Windows endpoint environments</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Custom Branding (Optional)</td><td>Consultation on workspace look and feel to match corporate standards</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Consultation Deliverables</td><td>Custom configuration guide, training materials, and best-practice documentation</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Acceptance Criteria</td><td>Customer validates readiness for production AVD use following guided implementation</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Dependencies</td><td>Customer provides infrastructure access and participates in scheduled onboarding sessions</td></tr>
+              <tr class="border-t border-[var(--c-surface-3)]"><td>Pricing</td><td>Included in onboarding engagement (non-standalone service)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <section id="tab-sla" role="tabpanel" aria-labelledby="tab-sla-btn" class="tab-content hidden">
       <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)]">
         <h2 class="text-lg font-semibold mb-4">Support SLA Comparison</h2>
@@ -208,29 +245,16 @@
   </div>
 
   <script>
-    // ONE CHANGE FOR BRAND ANALYSIS & APPLICATION:
-    // If a branding style guide object is exposed on window.BRAND_GUIDE (from knowledge files),
-    // this will apply its tokens to CSS variables and logo/title automatically with 100% accuracy mapping.
-    // Expected shape:
-    // {
-    //   name: "Recast",
-    //   logoDataUrl: "data:image/png;base64,...",
-    //   colors: { background, surface, surface2, surface3, text, muted, primary, onPrimary },
-    //   fontFamily: "Inter, ui-sans-serif, system-ui, ...",
-    //   radius: { lg: "1rem", full: "9999px" }
-    // }
     (function applyBrandingFromGuide() {
       try {
         var guide = window.BRAND_GUIDE;
         if (!guide || typeof guide !== 'object') return;
-
         var root = document.documentElement;
         var set = (k, v) => { if (v) root.style.setProperty(k, v); };
-
         if (guide.colors) {
           set('--c-bg', guide.colors.background);
           set('--c-surface', guide.colors.surface);
-          set('--c-surface-2', guide.colors.surface2 || guide.colors.surface2 === '' ? guide.colors.surface2 : guide.colors.surface);
+          set('--c-surface-2', guide.colors.surface2 || guide.colors.surface);
           set('--c-surface-3', guide.colors.surface3 || '#374151');
           set('--c-text', guide.colors.text);
           set('--c-muted', guide.colors.muted);
@@ -260,8 +284,6 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       document.body.classList.add('tw-ready');
-
-      // CDNs health check (best-effort)
       setTimeout(function () {
         var tailwindOk = !!window.tailwind;
         var lucideOk = !!window.lucide;
@@ -270,11 +292,9 @@
           if (alertEl) alertEl.classList.remove('hidden');
         }
       }, 400);
-
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
-
       initApp();
     });
 
@@ -306,7 +326,7 @@
     function computeTotals() {
       const p = STATE.pricing[STATE.term];
       const baseArr = p.perUser * STATE.users;
-      const totalContract = baseArr; // identical currently; hook for future promos
+      const totalContract = baseArr;
       const margin = totalContract * 0.30;
       const partnerPrice = totalContract - margin;
       const salesCommission = totalContract * 0.10;
@@ -391,7 +411,6 @@
         navigator.clipboard.writeText(lines.join('\n'));
         showToast('Summary copied to clipboard');
       } catch (_) {
-        // fallback to mailto open
         window.location.href = mailto;
       }
     }
