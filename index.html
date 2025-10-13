@@ -82,7 +82,13 @@
       <div class="rounded-2xl bg-[var(--c-surface)] p-6 mb-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
           <div>
-            <label for="users" class="font-semibold block mb-2">User count</label>
+            <label for="currency" class="font-semibold block mb-2">Currency</label>
+            <select id="currency" name="currency" class="w-40 rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
+              <option value="USD" selected>USD</option>
+              <option value="GBP">GBP (Pound)</option>
+              <option value="EUR">EUR (Euro)</option>
+            </select>
+            <label for="users" class="font-semibold block mt-4 mb-2">User count</label>
             <input id="users" name="users" type="number" inputmode="numeric" min="1" value="500"
               class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
               aria-describedby="users-help" />
@@ -198,6 +204,36 @@
         </div>
       </div>
     </section>
+
+    <section id="tab-sla" role="tabpanel" aria-labelledby="tab-sla-btn" class="tab-content hidden">
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
+        <h2 class="text-lg font-semibold mb-4">Support Service Levels</h2>
+        <div class="overflow-x-auto -mx-2 sm:mx-0">
+          <table class="w-full text-left border-collapse min-w-[560px]" aria-label="Support features and response times">
+            <thead class="text-[var(--c-muted)] text-sm">
+              <tr>
+                <th scope="col" class="pb-2 font-medium">Feature</th>
+                <th scope="col" class="pb-2 font-medium">Support</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Urgent Severity</td><td>First response: <strong>1 Business Day</strong></td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Normal Severity</td><td>First response: <strong>2 Business Days</strong></td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Low Severity</td><td>First response: <strong>3 Business Days</strong></td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Availability</td><td>8am – 5pm CT/CET</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Support Hours</td><td>Unlimited</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Dedicated CSM</td><td>✔</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Support Call Scheduling</td><td>Based on availability</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Environment Audit</td><td>—</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Configuration Audit</td><td>—</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Upgrade Assistance</td><td>—</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">User Group Membership</td><td>Based on availability</td></tr>
+              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Pricing</td><td>Included with Nerdio Licensing</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-4 right-4 z-50 hidden">
@@ -261,7 +297,14 @@
       initApp();
     });
 
+    const CURRENCIES = {
+      USD: { code: 'USD', label: 'USD', locale: 'en-US', rateFromUSD: 1.00 },
+      EUR: { code: 'EUR', label: 'EUR', locale: 'de-DE', rateFromUSD: 0.85 },
+      GBP: { code: 'GBP', label: 'GBP', locale: 'en-GB', rateFromUSD: 0.77 }
+    };
+
     const STATE = {
+      currency: 'USD',
       users: 500,
       term: 'Monthly',
       totals: {
@@ -284,8 +327,19 @@
       return 1.50;
     }
 
-    function formatCurrency(v) {
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(v || 0);
+    function getCurrencyMeta() {
+      return CURRENCIES[STATE.currency] || CURRENCIES.USD;
+    }
+
+    function toSelectedCurrency(amountUSD) {
+      const { rateFromUSD } = getCurrencyMeta();
+      return amountUSD * rateFromUSD;
+    }
+
+    function formatCurrencyFromUSD(amountUSD) {
+      const { code, locale } = getCurrencyMeta();
+      const v = toSelectedCurrency(amountUSD) || 0;
+      return new Intl.NumberFormat(locale, { style: 'currency', currency: code, maximumFractionDigits: 2 }).format(v);
     }
 
     function validateUsers(n) {
@@ -295,41 +349,49 @@
 
     function computeTotals() {
       STATE.perUserMonthly = getTierPricePerUserMonthly(STATE.users);
-      const monthlyCost = STATE.perUserMonthly * STATE.users;
-      const annualCost = monthlyCost * 12;
+      const monthlyCostUSD = STATE.perUserMonthly * STATE.users;
+      const annualCostUSD = monthlyCostUSD * 12;
 
-      const baseArr = annualCost;
-      const totalContract = STATE.term === 'Annual' ? annualCost : monthlyCost;
+      const baseArrUSD = annualCostUSD;
+      const totalContractUSD = STATE.term === 'Annual' ? annualCostUSD : monthlyCostUSD;
 
-      const margin = totalContract * 0.30;
-      const partnerPrice = totalContract - margin;
-      const salesCommission = totalContract * 0.10;
+      const marginUSD = totalContractUSD * 0.30;
+      const partnerPriceUSD = totalContractUSD - marginUSD;
+      const salesCommissionUSD = totalContractUSD * 0.10;
 
-      STATE.totals = { baseArr, totalContract, margin, partnerPrice, salesCommission };
+      STATE.totals = {
+        baseArr: baseArrUSD,
+        totalContract: totalContractUSD,
+        margin: marginUSD,
+        partnerPrice: partnerPriceUSD,
+        salesCommission: salesCommissionUSD
+      };
     }
 
     function renderSummary() {
-      document.getElementById('baseArr').textContent = formatCurrency(STATE.totals.baseArr);
-      document.getElementById('totalContract').textContent = formatCurrency(STATE.totals.totalContract);
+      document.getElementById('baseArr').textContent = formatCurrencyFromUSD(STATE.totals.baseArr);
+      document.getElementById('totalContract').textContent = formatCurrencyFromUSD(STATE.totals.totalContract);
     }
 
     function renderCustomerTable() {
       document.getElementById('custUsers').textContent = String(STATE.users);
-      document.getElementById('custBase').textContent = formatCurrency(STATE.totals.baseArr);
-      document.getElementById('custTotal').textContent = formatCurrency(STATE.totals.totalContract);
+      document.getElementById('custBase').textContent = formatCurrencyFromUSD(STATE.totals.baseArr);
+      document.getElementById('custTotal').textContent = formatCurrencyFromUSD(STATE.totals.totalContract);
     }
 
     function renderPartnerTable() {
       document.getElementById('partnerUsers').textContent = String(STATE.users);
-      document.getElementById('partnerPrice').textContent = formatCurrency(STATE.totals.partnerPrice);
-      document.getElementById('salesCommission').textContent = formatCurrency(STATE.totals.salesCommission);
+      document.getElementById('partnerPrice').textContent = formatCurrencyFromUSD(STATE.totals.partnerPrice);
+      document.getElementById('salesCommission').textContent = formatCurrencyFromUSD(STATE.totals.salesCommission);
     }
 
     function renderForm() {
       var usersInput = document.getElementById('users');
       var termSelect = document.getElementById('term');
+      var currencySelect = document.getElementById('currency');
       if (Number(usersInput.value) !== STATE.users) usersInput.value = STATE.users;
       if (termSelect.value !== STATE.term) termSelect.value = STATE.term;
+      if (currencySelect.value !== STATE.currency) currencySelect.value = STATE.currency;
     }
 
     function renderTabs(active) {
@@ -362,21 +424,23 @@
 
     function copyEmailSummary() {
       const subject = 'Pricing Summary';
+      const { code } = getCurrencyMeta();
       const lines = [
         'Recast Pricing Summary',
         '',
         'Inputs',
         `- Users: ${STATE.users}`,
         `- Term: ${STATE.term}`,
-        `- Tiered MSRP (per-user monthly): ${formatCurrency(STATE.perUserMonthly)}`,
+        `- Currency: ${code}`,
+        `- Tiered MSRP (per-user monthly): ${formatCurrencyFromUSD(STATE.perUserMonthly)}`,
         '',
         'Customer Pricing',
-        `- Base ARR: ${formatCurrency(STATE.totals.baseArr)}`,
-        `- Total Contract Value (${STATE.term}): ${formatCurrency(STATE.totals.totalContract)}`,
+        `- Base ARR: ${formatCurrencyFromUSD(STATE.totals.baseArr)}`,
+        `- Total Contract Value (${STATE.term}): ${formatCurrencyFromUSD(STATE.totals.totalContract)}`,
         '',
         'Partner Pricing',
-        `- Net New Partner Price: ${formatCurrency(STATE.totals.partnerPrice)}`,
-        `- Sales Rep Commission (10%): ${formatCurrency(STATE.totals.salesCommission)}`
+        `- Net New Partner Price: ${formatCurrencyFromUSD(STATE.totals.partnerPrice)}`,
+        `- Sales Rep Commission (10%): ${formatCurrencyFromUSD(STATE.totals.salesCommission)}`
       ];
       const body = encodeURIComponent(lines.join('\n'));
       const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
@@ -392,6 +456,7 @@
       const usersInput = document.getElementById('users');
       const usersError = document.getElementById('users-error');
       const termSelect = document.getElementById('term');
+      const currencySelect = document.getElementById('currency');
 
       usersInput.addEventListener('input', () => {
         const n = parseInt(usersInput.value, 10);
@@ -408,6 +473,11 @@
 
       termSelect.addEventListener('change', () => {
         STATE.term = termSelect.value;
+        renderAll();
+      });
+
+      currencySelect.addEventListener('change', () => {
+        STATE.currency = currencySelect.value;
         renderAll();
       });
 
