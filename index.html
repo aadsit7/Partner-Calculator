@@ -53,14 +53,14 @@
         <span>Copy</span>
       </button>
     </div>
-    <p class="mt-2 text-sm text-[var(--c-muted)]">Estimate only. Not a formal quote.</p>
+    <p class="mt-2 text-sm text-[var(--c-muted)]"> 1-Year Term Contract | Discounts increase with higher MAU tiers.</p>
   </header>
 
   <nav class="max-w-6xl mx-auto px-4 mt-4" role="tablist" aria-label="Pricing sections">
     <div class="inline-flex rounded-[var(--radius-full)] bg-[var(--c-surface-2)] p-1 shadow-sm ring-1 ring-[color:var(--c-surface-3)]/40">
       <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="true" aria-controls="tab-customer" id="tab-customer-btn" data-tab="customer" data-active="true">
-        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Application Workspace Pricing</span>
+        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Pricing</span>
       </button>
       <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
               role="tab" aria-selected="false" aria-controls="tab-onboarding" id="tab-onboarding-btn" data-tab="onboarding" data-active="false">
@@ -75,8 +75,8 @@
 
   <main id="main" tabindex="-1" class="max-w-6xl mx-auto px-4 py-6">
     <section id="tab-customer" role="tabpanel" aria-labelledby="tab-customer-btn" class="tab-content">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 mb-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
-        <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
+      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
+        <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-4" novalidate>
           <div>
             <label for="currency" class="font-semibold block mb-2">Currency</label>
             <select id="currency" name="currency" class="w-40 rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
@@ -85,77 +85,37 @@
               <option value="EUR">EUR (Euro)</option>
             </select>
             <label for="users" class="font-semibold block mt-4 mb-2">User count</label>
-            <input id="users" name="users" type="number" inputmode="numeric" min="1" value="500"
+            <input id="users" name="users" type="number" inputmode="numeric" min="250" value="500"
               class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
               aria-describedby="users-help" />
             <p id="users-help" class="text-xs text-[var(--c-muted)] mt-1">Enter number of licensed users (minimum 250).</p>
-            <p id="users-error" class="hidden mt-1 text-xs text-red-300" role="alert">Please enter a valid user count (1 or more).</p>
+            <p id="users-error" class="hidden mt-1 text-xs text-red-300" role="alert">Please enter a valid user count (minimum 250).</p>
           </div>
           <div>
-            <label for="term" class="font-semibold block mb-2">Contract Term</label>
-            <select id="term" name="term"
-              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
-              <option value="Monthly" selected>Monthly</option>
-              <option value="Annual">Annual</option>
-            </select>
-            <p id="term-help" class="text-xs text-[var(--c-muted)] mt-1">When Monthly is selected, all MSRP values show monthly (MRR). When Annual is selected, only annual (ARR) values are shown.</p>
+            <label class="font-semibold block mb-2">Sales Rep Commission (ARR)</label>
+            <p id="salesCommission" class="text-2xl font-bold tracking-tight text-[var(--c-primary)]">$0.00</p>
           </div>
         </form>
 
-        <div class="flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between border-t border-[color:var(--c-surface-3)]/50 pt-4">
-          <div>
-            <p id="baseLabel" class="text-[var(--c-muted)]">Base ARR</p>
-            <p id="baseArr" class="text-2xl font-bold tracking-tight">$0.00</p>
-          </div>
-          <div>
-            <p id="totalLabel" class="text-[var(--c-muted)]">Total Contract Value</p>
-            <p id="totalContract" class="text-2xl font-bold tracking-tight text-[var(--c-primary)]">$0.00</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
         <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
-        <div class="overflow-x-auto -mx-2 sm:mx-0">
-          <table class="w-full text-left border-collapse min-w-[560px]">
+        <div class="overflow-x-auto -mx-6 sm:mx-0 mb-6">
+          <table class="w-full text-left border-collapse min-w-[640px]">
             <thead class="text-[var(--c-muted)] text-sm">
               <tr>
-                <th class="pb-2 font-medium">Product</th>
+                <th class="pb-2 font-medium px-6 sm:px-0">Product</th>
                 <th class="pb-2 font-medium">Users</th>
-                <th id="thBase" class="pb-2 font-medium">Base ARR</th>
-                <th id="thTotal" class="pb-2 font-medium">Total</th>
+                <th id="custPerUserHeader" class="pb-2 font-medium">Per User / month</th>
+                <th id="thBaseCust" class="pb-2 font-medium">Base MRR</th>
+                <th id="thTotalCust" class="pb-2 font-medium">Total ARR</th>
               </tr>
             </thead>
             <tbody>
               <tr class="border-t border-[color:var(--c-surface-3)]/50">
-                <td class="py-2">Application Workspace</td>
+                <td class="py-2 px-6 sm:px-0">Application Workspace</td>
                 <td id="custUsers">0</td>
+                <td id="custPerUser">$0.00</td>
                 <td id="custBase">$0.00</td>
                 <td id="custTotal">$0.00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] mt-6 ring-1 ring-[color:var(--c-surface-3)]/40">
-        <h2 class="text-lg font-semibold mb-4">Nerdio Quote (Internal Only)</h2>
-        <div class="overflow-x-auto -mx-2 sm:mx-0">
-          <table class="w-full text-left border-collapse min-w-[560px]">
-            <thead class="text-[var(--c-muted)] text-sm">
-              <tr>
-                <th class="pb-2 font-medium">Product</th>
-                <th class="pb-2 font-medium">Users</th>
-                <th class="pb-2 font-medium">Nerdio Price</th>
-                <th class="pb-2 font-medium">Sales Rep Commission </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50">
-                <td>Application Workspace</td>
-                <td id="partnerUsers">0</td>
-                <td id="partnerPrice">$0.00</td>
-                <td id="salesCommission" class="font-semibold text-red-300">$0.00</td>
               </tr>
             </tbody>
           </table>
@@ -306,22 +266,49 @@
         baseAnnual: 0,
         totalMonthly: 0,
         totalAnnual: 0,
-        selectedTotal: 0,
-        margin: 0,
         partnerPrice: 0,
         salesCommission: 0
-      },
-      perUserMonthly: 4.00
+      }
     };
 
-    function getTierPricePerUserMonthly(users) {
+    function calculateMonthlyCost(users) {
       if (!Number.isFinite(users) || users < 1) return 0;
-      if (users <= 999) return 4.00;
-      if (users <= 4999) return 3.50;
-      if (users <= 9999) return 3.00;
-      if (users <= 24999) return 2.50;
-      if (users <= 49999) return 2.00;
-      return 1.50;
+      let total = 0;
+      let remaining = users;
+
+      // Tier 1: 1-999 @ $4.00
+      let tier1 = Math.min(remaining, 999);
+      total += tier1 * 4.00;
+      remaining -= tier1;
+      if (remaining <= 0) return total;
+
+      // Tier 2: 1000-4999 @ $3.50 (4000 users)
+      let tier2 = Math.min(remaining, 4000);
+      total += tier2 * 3.50;
+      remaining -= tier2;
+      if (remaining <= 0) return total;
+
+      // Tier 3: 5000-9999 @ $3.00 (5000 users)
+      let tier3 = Math.min(remaining, 5000);
+      total += tier3 * 3.00;
+      remaining -= tier3;
+      if (remaining <= 0) return total;
+
+      // Tier 4: 10000-24999 @ $2.50 (15000 users)
+      let tier4 = Math.min(remaining, 15000);
+      total += tier4 * 2.50;
+      remaining -= tier4;
+      if (remaining <= 0) return total;
+
+      // Tier 5: 25000-49999 @ $2.00 (25000 users)
+      let tier5 = Math.min(remaining, 25000);
+      total += tier5 * 2.00;
+      remaining -= tier5;
+      if (remaining <= 0) return total;
+
+      // Tier 6: 50000+ @ $1.50
+      total += remaining * 1.50;
+      return total;
     }
 
     function getCurrencyMeta() {
@@ -340,86 +327,55 @@
     }
 
     function validateUsers(n) {
-      var valid = Number.isFinite(n) && n >= 1 && n <= 1000000;
-      return { valid, message: valid ? '' : 'Please enter a valid user count (1 or more).' };
+      var valid = Number.isFinite(n) && n >= 250 && n <= 1000000;
+      return { valid, message: valid ? '' : 'Please enter a valid user count (minimum 250).' };
     }
 
     function computeTotals() {
-      STATE.perUserMonthly = getTierPricePerUserMonthly(STATE.users);
-      const monthlyCostUSD = STATE.perUserMonthly * STATE.users;
+      const monthlyCostUSD = calculateMonthlyCost(STATE.users);
       const annualCostUSD = monthlyCostUSD * 12;
       const baseMonthlyUSD = monthlyCostUSD;
       const baseAnnualUSD = annualCostUSD;
-      const totalMonthlyUSD = monthlyCostUSD;
-      const totalAnnualUSD = annualCostUSD;
-      const selectedTotalUSD = STATE.term === 'Annual' ? totalAnnualUSD : totalMonthlyUSD;
-      const marginUSD = selectedTotalUSD * 0.30;
-      const partnerPriceUSD = selectedTotalUSD - marginUSD;
-      const salesCommissionUSD = selectedTotalUSD * 0.10;
+      const totalMonthlyUSD = baseMonthlyUSD;
+      const totalAnnualUSD = baseAnnualUSD;
+      const marginUSD = totalAnnualUSD * 0.30;
+      const partnerPriceUSD = totalAnnualUSD - marginUSD;
+      const salesCommissionUSD = totalAnnualUSD * 0.10;
       STATE.totals = {
         baseMonthly: baseMonthlyUSD,
         baseAnnual: baseAnnualUSD,
         totalMonthly: totalMonthlyUSD,
         totalAnnual: totalAnnualUSD,
-        selectedTotal: selectedTotalUSD,
-        margin: marginUSD,
         partnerPrice: partnerPriceUSD,
         salesCommission: salesCommissionUSD
       };
     }
 
-    function renderSummary() {
-      const baseLabel = document.getElementById('baseLabel');
-      const totalLabel = document.getElementById('totalLabel');
-      const baseValue = document.getElementById('baseArr');
-      const totalValue = document.getElementById('totalContract');
-      if (STATE.term === 'Monthly') {
-        baseLabel.textContent = 'Base MRR';
-        totalLabel.textContent = 'Total Monthly';
-        baseValue.textContent = formatCurrencyFromUSD(STATE.totals.baseMonthly);
-        totalValue.textContent = formatCurrencyFromUSD(STATE.totals.totalMonthly);
-      } else {
-        baseLabel.textContent = 'Base ARR';
-        totalLabel.textContent = 'Total Annual';
-        baseValue.textContent = formatCurrencyFromUSD(STATE.totals.baseAnnual);
-        totalValue.textContent = formatCurrencyFromUSD(STATE.totals.totalAnnual);
-      }
-    }
-
     function renderCustomerTable() {
-      const thBase = document.getElementById('thBase');
-      const thTotal = document.getElementById('thTotal');
+      const custPerUserHeader = document.getElementById('custPerUserHeader');
+      const thBaseCust = document.getElementById('thBaseCust');
+      const thTotalCust = document.getElementById('thTotalCust');
       document.getElementById('custUsers').textContent = String(STATE.users);
-      if (STATE.term === 'Monthly') {
-        thBase.textContent = 'Base MRR';
-        thTotal.textContent = 'Total Monthly';
-        document.getElementById('custBase').textContent = formatCurrencyFromUSD(STATE.totals.baseMonthly);
-        document.getElementById('custTotal').textContent = formatCurrencyFromUSD(STATE.totals.totalMonthly);
-      } else {
-        thBase.textContent = 'Base ARR';
-        thTotal.textContent = 'Total Annual';
-        document.getElementById('custBase').textContent = formatCurrencyFromUSD(STATE.totals.baseAnnual);
-        document.getElementById('custTotal').textContent = formatCurrencyFromUSD(STATE.totals.totalAnnual);
-      }
+      const monthlyCostUSD = calculateMonthlyCost(STATE.users);
+      const avgPerUserMonthly = monthlyCostUSD / STATE.users;
+      const perUser = avgPerUserMonthly;
+      document.getElementById('custPerUser').textContent = formatCurrencyFromUSD(perUser);
+      thBaseCust.textContent = 'Base MRR';
+      thTotalCust.textContent = 'Total ARR';
+      custPerUserHeader.textContent = 'Per User / month';
+      document.getElementById('custBase').textContent = formatCurrencyFromUSD(STATE.totals.baseMonthly);
+      document.getElementById('custTotal').textContent = formatCurrencyFromUSD(STATE.totals.totalAnnual);
     }
 
-    function renderPartnerTable() {
-      document.getElementById('partnerUsers').textContent = String(STATE.users);
-      document.getElementById('partnerPrice').textContent = formatCurrencyFromUSD(STATE.totals.partnerPrice);
+    function renderCommission() {
       document.getElementById('salesCommission').textContent = formatCurrencyFromUSD(STATE.totals.salesCommission);
     }
 
     function renderForm() {
       var usersInput = document.getElementById('users');
-      var termSelect = document.getElementById('term');
       var currencySelect = document.getElementById('currency');
-      var termHelp = document.getElementById('term-help');
       if (Number(usersInput.value) !== STATE.users) usersInput.value = STATE.users;
-      if (termSelect.value !== STATE.term) termSelect.value = STATE.term;
       if (currencySelect.value !== STATE.currency) currencySelect.value = STATE.currency;
-      if (termHelp) {
-        termHelp.textContent = 'When ' + STATE.term + ' is selected, all MSRP values show ' + (STATE.term === 'Monthly' ? 'monthly (MRR)' : 'annual (ARR)') + '.';
-      }
     }
 
     function renderTabs(active) {
@@ -435,9 +391,8 @@
 
     function renderAll() {
       computeTotals();
-      renderSummary();
       renderCustomerTable();
-      renderPartnerTable();
+      renderCommission();
       renderForm();
     }
 
@@ -453,27 +408,26 @@
     function copyEmailSummary() {
       const subject = 'Pricing Summary';
       const { code } = getCurrencyMeta();
-      const termIsMonthly = STATE.term === 'Monthly';
-      const baseLabel = termIsMonthly ? 'Base MRR' : 'Base ARR';
-      const totalLabel = termIsMonthly ? 'Total Monthly' : 'Total Annual';
-      const baseValue = termIsMonthly ? STATE.totals.baseMonthly : STATE.totals.baseAnnual;
-      const totalValue = termIsMonthly ? STATE.totals.totalMonthly : STATE.totals.totalAnnual;
+      const baseLabel = 'Base MRR';
+      const totalLabel = 'Total ARR';
+      const baseValue = STATE.totals.baseMonthly;
+      const totalValue = STATE.totals.totalAnnual;
+      const monthlyCostUSD = calculateMonthlyCost(STATE.users);
+      const averageMonthlyPerUser = monthlyCostUSD / STATE.users;
 
       const lines = [
         'Recast Pricing Summary',
         '',
         'Inputs',
         `- Users: ${STATE.users}`,
-        `- Term: ${STATE.term}`,
         `- Currency: ${code}`,
-        `- Tiered MSRP (per-user monthly): ${formatCurrencyFromUSD(STATE.perUserMonthly)}`,
+        `- Average MSRP (per-user monthly): ${formatCurrencyFromUSD(averageMonthlyPerUser)}`,
         '',
         'Customer Pricing',
         `- ${baseLabel}: ${formatCurrencyFromUSD(baseValue)}`,
         `- ${totalLabel}: ${formatCurrencyFromUSD(totalValue)}`,
         '',
-        'Partner Pricing (based on selected term)',
-        `- Net New Partner Price: ${formatCurrencyFromUSD(STATE.totals.partnerPrice)}`,
+        'Partner Pricing (ARR)',
         `- Sales Rep Commission (10%): ${formatCurrencyFromUSD(STATE.totals.salesCommission)}`
       ];
       const body = encodeURIComponent(lines.join('\n'));
@@ -489,7 +443,6 @@
     function initEvents() {
       const usersInput = document.getElementById('users');
       const usersError = document.getElementById('users-error');
-      const termSelect = document.getElementById('term');
       const currencySelect = document.getElementById('currency');
 
       usersInput.addEventListener('input', () => {
@@ -502,11 +455,6 @@
         }
         usersError.classList.add('hidden');
         STATE.users = n;
-        renderAll();
-      });
-
-      termSelect.addEventListener('change', () => {
-        STATE.term = termSelect.value;
         renderAll();
       });
 
