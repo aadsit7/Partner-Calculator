@@ -1,117 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recast Pricing Calculator</title>
-  <meta name="description" content="Instantly estimate customer and partner pricing with an accessible, brand-aware calculator." />
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-  <script src="https://cdn.tailwindcss.com" defer></script>
-  <style>
-    :root {
-      color-scheme: dark;
-      --c-bg: #1C289C;
-      --c-surface: #2F39A3;
-      --c-surface-2: #2A35A1;
-      --c-surface-3: #8085C7;
-      --c-text: #FFFFFF;
-      --c-muted: #DFE0F1;
-      --c-primary: #F05928;
-      --c-primary-contrast: #FFFFFF;
-      --radius-lg: 1rem;
-      --radius-full: 9999px;
-      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      --shadow-soft: 0 10px 20px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.18);
-    }
-    body:not(.tw-ready) {
-      background: var(--c-bg);
-      color: var(--c-text);
-      font-family: var(--font-sans);
-      margin: 0;
-      padding: 16px;
-    }
-  </style>
+  <meta name="description" content="Instantly estimate customer and partner pricing with an accessible, brand-aware calculator.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="min-h-screen bg-[var(--c-bg)] text-[var(--c-text)]">
-  <div id="cdn-alert" role="alert" aria-live="polite" class="hidden fixed inset-x-0 top-0 z-40 mx-auto max-w-3xl rounded-b-[var(--radius-lg)] bg-[var(--c-surface)]/95 backdrop-blur px-4 py-3 shadow-md">
-    <div class="flex items-center gap-3">
-      <span class="inline-flex size-5 items-center justify-center rounded-full bg-[var(--c-primary)]/20">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" class="block"><path fill="currentColor" d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2z"/></svg>
-      </span>
-      <p class="text-sm"><strong>Heads up:</strong> Some styles or icons may look different if CDNs are blocked. The calculator still works.</p>
-    </div>
-  </div>
-
-  <header class="max-w-6xl mx-auto px-4 pt-8 pb-4">
+<body class="min-h-screen bg-gray-50 font-['Inter',sans-serif] text-gray-900 antialiased">
+  <header class="max-w-6xl mx-auto px-6 lg:px-12 pt-8 pb-4">
     <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <img id="brand-logo" alt="Brand logo" src="" class="hidden h-8 w-auto" />
-        <h1 id="brand-title" class="text-2xl sm:text-3xl font-bold tracking-[-0.02em]">Recast Pricing Calculator</h1>
+        <h1 class="text-3xl font-semibold leading-tight">Recast Pricing Calculator</h1>
       </div>
-      <button id="copy-email" class="inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 bg-[var(--c-primary)] text-[var(--c-primary-contrast)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--c-primary)] focus:ring-offset-[var(--c-bg)] transition text-sm font-medium">
-        <i data-lucide="mail" aria-hidden="true" class="size-4"></i>
-        <span>Copy</span>
+      <button id="copy-email" class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition text-base font-medium">
+        <i data-lucide="mail" class="size-4"></i>
+        <span>Copy Summary</span>
       </button>
     </div>
-    <p class="mt-2 text-sm text-[var(--c-muted)]"> 1-Year Term Contract | Discounts increase with higher MAU tiers.</p>
+    <p class="mt-2 text-base text-gray-700 leading-relaxed">1-Year Term Contract | Discounts increase with higher MAU tiers.</p>
   </header>
-
-  <nav class="max-w-6xl mx-auto px-4 mt-4" role="tablist" aria-label="Pricing sections">
-    <div class="inline-flex rounded-[var(--radius-full)] bg-[var(--c-surface-2)] p-1 shadow-sm ring-1 ring-[color:var(--c-surface-3)]/40">
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
+  <nav class="max-w-6xl mx-auto px-6 lg:px-12 mt-4" role="tablist" aria-label="Pricing sections">
+    <div class="inline-flex w-full sm:w-auto rounded-full bg-gray-100 p-1 shadow-sm divide-x divide-gray-200 sm:divide-x-0">
+      <button class="tab-btn flex-1 sm:flex-none inline-flex justify-center items-center gap-2 rounded-full px-6 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 data-[active=true]:bg-blue-600 data-[active=true]:text-white text-gray-700 hover:bg-gray-200 transition"
               role="tab" aria-selected="true" aria-controls="tab-customer" id="tab-customer-btn" data-tab="customer" data-active="true">
-        <i data-lucide="user" class="size-4" aria-hidden="true"></i><span>Pricing</span>
+        <i data-lucide="user" class="size-4"></i><span>Pricing</span>
       </button>
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
+      <button class="tab-btn flex-1 sm:flex-none inline-flex justify-center items-center gap-2 rounded-full px-6 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 data-[active=true]:bg-blue-600 data-[active=true]:text-white text-gray-700 hover:bg-gray-200 transition"
               role="tab" aria-selected="false" aria-controls="tab-onboarding" id="tab-onboarding-btn" data-tab="onboarding" data-active="false">
-        <i data-lucide="rocket" class="size-4" aria-hidden="true"></i><span>Onboarding</span>
+        <i data-lucide="rocket" class="size-4"></i><span>Onboarding</span>
       </button>
-      <button class="tab-btn inline-flex items-center gap-2 rounded-[var(--radius-full)] px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)] focus:ring-offset-2 focus:ring-offset-[var(--c-bg)] data-[active=true]:bg-[var(--c-primary)] data-[active=true]:text-[var(--c-primary-contrast)] text-[var(--c-text)]/95 hover:bg-[color:var(--c-surface-3)]/15 transition"
+      <button class="tab-btn flex-1 sm:flex-none inline-flex justify-center items-center gap-2 rounded-full px-6 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 data-[active=true]:bg-blue-600 data-[active=true]:text-white text-gray-700 hover:bg-gray-200 transition"
               role="tab" aria-selected="false" aria-controls="tab-sla" id="tab-sla-btn" data-tab="sla" data-active="false">
-        <i data-lucide="life-buoy" class="size-4" aria-hidden="true"></i><span>Support</span>
+        <i data-lucide="life-buoy" class="size-4"></i><span>Support</span>
       </button>
     </div>
   </nav>
-
-  <main id="main" tabindex="-1" class="max-w-6xl mx-auto px-4 py-6">
+  <main id="main" tabindex="-1" class="max-w-6xl mx-auto px-6 lg:px-12 py-6 space-y-6">
     <section id="tab-customer" role="tabpanel" aria-labelledby="tab-customer-btn" class="tab-content">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
-        <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-4" novalidate>
-          <div>
-            <label for="currency" class="font-semibold block mb-2">Currency</label>
-            <select id="currency" name="currency" class="w-40 rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]">
-              <option value="USD" selected>USD</option>
-              <option value="GBP">GBP (Pound)</option>
-              <option value="EUR">EUR (Euro)</option>
-            </select>
-            <label for="users" class="font-semibold block mt-4 mb-2">User count</label>
-            <input id="users" name="users" type="number" inputmode="numeric" min="250" value="500"
-              class="w-full rounded-lg px-3 py-2 bg-[var(--c-surface-2)] ring-1 ring-[color:var(--c-surface-3)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]"
-              aria-describedby="users-help" />
-            <p id="users-help" class="text-xs text-[var(--c-muted)] mt-1">Enter number of licensed users (minimum 250).</p>
-            <p id="users-error" class="hidden mt-1 text-xs text-red-300" role="alert">Please enter a valid user count (minimum 250).</p>
+      <div class="rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <form id="customer-form" class="grid md:grid-cols-2 gap-6 mb-6" novalidate>
+          <div class="space-y-4">
+            <div>
+              <label for="currency" class="block text-base font-medium text-gray-900 mb-2">Currency</label>
+              <select id="currency" name="currency" class="w-full sm:w-40 rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white text-gray-900">
+                <option value="USD" selected>USD</option>
+                <option value="GBP">GBP (Pound)</option>
+                <option value="EUR">EUR (Euro)</option>
+              </select>
+            </div>
+            <div>
+              <label for="users" class="block text-base font-medium text-gray-900 mb-2">User count</label>
+              <input id="users" name="users" type="number" inputmode="numeric" min="250" value="500"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white text-gray-900"
+                aria-describedby="users-help users-error" />
+              <p id="users-help" class="text-sm text-gray-500 mt-1">Enter number of licensed users (minimum 250).</p>
+              <p id="users-error" class="hidden mt-1 text-sm text-red-600" role="alert">Please enter a valid user count (minimum 250).</p>
+            </div>
           </div>
-          <div>
-            <label class="font-semibold block mb-2">Sales Rep Commission (ARR)</label>
-            <p id="salesCommission" class="text-2xl font-bold tracking-tight text-[var(--c-primary)]">$0.00</p>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-base font-medium text-gray-900 mb-2">Sales Rep Commission (ARR)</label>
+              <p id="salesCommission" class="text-3xl font-semibold leading-tight text-blue-600">$0.00</p>
+            </div>
           </div>
         </form>
-
-        <h2 class="text-lg font-semibold mb-4">Customer Quote</h2>
-        <div class="overflow-x-auto -mx-6 sm:mx-0 mb-6">
-          <table class="w-full text-left border-collapse min-w-[640px]">
-            <thead class="text-[var(--c-muted)] text-sm">
-              <tr>
-                <th class="pb-2 font-medium px-6 sm:px-0">Product</th>
-                <th class="pb-2 font-medium">Users</th>
-                <th id="custPerUserHeader" class="pb-2 font-medium">Per User / month</th>
-                <th id="thBaseCust" class="pb-2 font-medium">Base MRR</th>
-                <th id="thTotalCust" class="pb-2 font-medium">Total ARR</th>
+        <h2 class="text-xl font-medium mb-4">Customer Quote</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-base text-gray-700">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th class="pb-3 font-medium">Product</th>
+                <th class="pb-3 font-medium">Users</th>
+                <th id="custPerUserHeader" class="pb-3 font-medium">Per User / month</th>
+                <th id="thBaseCust" class="pb-3 font-medium">Base MRR</th>
+                <th id="thTotalCust" class="pb-3 font-medium">Total ARR</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50">
-                <td class="py-2 px-6 sm:px-0">Application Workspace</td>
+              <tr class="border-b border-gray-200 last:border-0">
+                <td class="py-3">Application Workspace</td>
                 <td id="custUsers">0</td>
                 <td id="custPerUser">$0.00</td>
                 <td id="custBase">$0.00</td>
@@ -122,132 +92,80 @@
         </div>
       </div>
     </section>
-
     <section id="tab-onboarding" role="tabpanel" aria-labelledby="tab-onboarding-btn" class="tab-content hidden">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
-        <h2 class="text-lg font-semibold mb-2">Recast Onboarding Overview</h2>
-        <p class="text-[var(--c-text)]/90 mb-2">Moving from Citrix to Azure Virtual Desktop (AVD) has never been easier.</p>
-        <p class="text-[var(--c-text)]/90 mb-4">Our onboarding is built to make your transition fast, predictable, and low-stress. You’ll work directly with Recast experts who guide your IT team step-by-step — from environment preparation to AVD configuration and go-live support. Within a few weeks, your environment will be fully optimized for AVD and ready for production use.</p>
-        <h3 class="text-base font-semibold mb-3">Onboarding Services Comparison</h3>
-        <div class="overflow-x-auto -mx-2 sm:mx-0">
-          <table class="w-full text-left border-collapse min-w-[640px]">
-            <thead class="text-[var(--c-muted)] text-sm">
-              <tr>
-                <th class="pb-2 font-medium">Onboarding Stage</th>
-                <th class="pb-2 font-medium">Citrix to AVD Transition Onboarding</th>
+      <div class="rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <h2 class="text-xl font-medium mb-2">Recast Onboarding Overview</h2>
+        <p class="text-base text-gray-700 leading-relaxed mb-2">Moving from Citrix to Azure Virtual Desktop (AVD) has never been easier.</p>
+        <p class="text-base text-gray-700 leading-relaxed mb-4">Our onboarding is built to make your transition fast, predictable, and low-stress. You’ll work directly with Recast experts who guide your IT team step-by-step — from environment preparation to AVD configuration and go-live support. Within a few weeks, your environment will be fully optimized for AVD and ready for production use.</p>
+        <h3 class="text-base font-medium mb-3">Onboarding Services Comparison</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-base text-gray-700">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th class="pb-3 font-medium">Onboarding Stage</th>
+                <th class="pb-3 font-medium">Citrix to AVD Transition Onboarding</th>
               </tr>
             </thead>
-            <tbody class="align-top">
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2">Project Duration</td><td>6–8 Weeks (max 40 consulting hours)</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Go-Live Support Period</td><td>6 Weeks post-configuration (2 hrs/week of SME access)</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Engagement Type</td><td>Advisory-led (Customer executes configurations under Recast guidance)</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Scope of Support</td><td>Migration planning, AVD setup, and operational transition from Citrix</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Availability</td><td>Standard Business Hours (8am–5pm CT/CET)</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Delivery Format</td><td>Remote consultation and documentation support</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Environment Preparation</td><td>Guidance for preparing infrastructure and identity access for AVD</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>AVD Configuration Assistance</td><td>Step-by-step guidance on configuring host pools, session management, and user access</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Policy &amp; Access Advisory</td><td>Consultation on conditional access, identity mapping, and application policies</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Modern Workplace Alignment</td><td>Optimization of AVD deployment for Windows endpoint environments</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Custom Branding (Optional)</td><td>Consultation on workspace look and feel to match corporate standards</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Consultation Deliverables</td><td>Custom configuration guide, training materials, and best-practice documentation</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Acceptance Criteria</td><td>Customer validates readiness for production AVD use following guided implementation</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Dependencies</td><td>Customer provides infrastructure access and participates in scheduled onboarding sessions</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td>Pricing</td><td>Included in onboarding engagement (non-standalone service)</td></tr>
+            <tbody>
+              <tr class="border-b border-gray-200"><td class="py-3">Project Duration</td><td class="py-3">6–8 Weeks (max 40 consulting hours)</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Go-Live Support Period</td><td class="py-3">6 Weeks post-configuration (2 hrs/week of SME access)</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Engagement Type</td><td class="py-3">Advisory-led (Customer executes configurations under Recast guidance)</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Scope of Support</td><td class="py-3">Migration planning, AVD setup, and operational transition from Citrix</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Availability</td><td class="py-3">Standard Business Hours (8am–5pm CT/CET)</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Delivery Format</td><td class="py-3">Remote consultation and documentation support</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Environment Preparation</td><td class="py-3">Guidance for preparing infrastructure and identity access for AVD</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">AVD Configuration Assistance</td><td class="py-3">Step-by-step guidance on configuring host pools, session management, and user access</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Policy &amp; Access Advisory</td><td class="py-3">Consultation on conditional access, identity mapping, and application policies</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Modern Workplace Alignment</td><td class="py-3">Optimization of AVD deployment for Windows endpoint environments</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Custom Branding (Optional)</td><td class="py-3">Consultation on workspace look and feel to match corporate standards</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Consultation Deliverables</td><td class="py-3">Custom configuration guide, training materials, and best-practice documentation</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Acceptance Criteria</td><td class="py-3">Customer validates readiness for production AVD use following guided implementation</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3">Dependencies</td><td class="py-3">Customer provides infrastructure access and participates in scheduled onboarding sessions</td></tr>
+              <tr class="border-b border-gray-200 last:border-0"><td class="py-3">Pricing</td><td class="py-3">Included in onboarding engagement (non-standalone service)</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
-
     <section id="tab-sla" role="tabpanel" aria-labelledby="tab-sla-btn" class="tab-content hidden">
-      <div class="rounded-2xl bg-[var(--c-surface)] p-6 shadow-[var(--shadow-soft)] ring-1 ring-[color:var(--c-surface-3)]/40">
-        <h2 class="text-lg font-semibold mb-4">Support Service Levels</h2>
-        <div class="overflow-x-auto -mx-2 sm:mx-0">
-          <table class="w-full text-left border-collapse min-w-[560px]" aria-label="Support features and response times">
-            <thead class="text-[var(--c-muted)] text-sm">
-              <tr>
-                <th scope="col" class="pb-2 font-medium">Feature</th>
-                <th scope="col" class="pb-2 font-medium">Support</th>
+      <div class="rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <h2 class="text-xl font-medium mb-4">Support Service Levels</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-base text-gray-700" aria-label="Support features and response times">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th scope="col" class="pb-3 font-medium">Feature</th>
+                <th scope="col" class="pb-3 font-medium">Support</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Urgent Severity</td><td>First response: <strong>1 Business Day</strong></td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Normal Severity</td><td>First response: <strong>2 Business Days</strong></td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Low Severity</td><td>First response: <strong>3 Business Days</strong></td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Availability</td><td>8am – 5pm CT/CET</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Support Hours</td><td>Unlimited</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Dedicated CSM</td><td>✔</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Support Call Scheduling</td><td>Based on availability</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Environment Audit</td><td>—</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Configuration Audit</td><td>—</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Upgrade Assistance</td><td>—</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">User Group Membership</td><td>Based on availability</td></tr>
-              <tr class="border-t border-[color:var(--c-surface-3)]/50"><td class="py-2 font-medium">Pricing</td><td>Included with Nerdio Licensing</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Urgent Severity</td><td class="py-3">First response: <strong>1 Business Day</strong></td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Normal Severity</td><td class="py-3">First response: <strong>2 Business Days</strong></td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Low Severity</td><td class="py-3">First response: <strong>3 Business Days</strong></td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Availability</td><td class="py-3">8am – 5pm CT/CET</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Support Hours</td><td class="py-3">Unlimited</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Dedicated CSM</td><td class="py-3">✔</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Support Call Scheduling</td><td class="py-3">Based on availability</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Environment Audit</td><td class="py-3">—</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Configuration Audit</td><td class="py-3">—</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">Upgrade Assistance</td><td class="py-3">—</td></tr>
+              <tr class="border-b border-gray-200"><td class="py-3 font-medium">User Group Membership</td><td class="py-3">Based on availability</td></tr>
+              <tr class="border-b border-gray-200 last:border-0"><td class="py-3 font-medium">Pricing</td><td class="py-3">Included with Recast Licensing</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
   </main>
-
   <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-4 right-4 z-50 hidden">
-    <div class="rounded-[var(--radius-lg)] bg-[var(--c-surface)] px-4 py-3 shadow-[var(--shadow-soft)] text-sm flex items-center gap-2 ring-1 ring-[color:var(--c-surface-3)]/40">
-      <i data-lucide="check" class="size-4" aria-hidden="true"></i>
+    <div class="rounded-xl bg-white px-4 py-3 shadow-lg text-base flex items-center gap-2 border border-gray-200">
+      <i data-lucide="check" class="size-4 text-green-600"></i>
       <span id="toast-msg">Copied to clipboard</span>
     </div>
   </div>
-
   <script>
-    (function applyBrandingFromGuide() {
-      try {
-        var guide = window.BRAND_GUIDE;
-        if (!guide || typeof guide !== 'object') return;
-        var root = document.documentElement;
-        var set = (k, v) => { if (v) root.style.setProperty(k, v); };
-        if (guide.colors) {
-          set('--c-bg', guide.colors.background);
-          set('--c-surface', guide.colors.surface);
-          set('--c-surface-2', guide.colors.surface2 || guide.colors.surface);
-          set('--c-surface-3', guide.colors.surface3 || '#8085C7');
-          set('--c-text', guide.colors.text || '#FFFFFF');
-          set('--c-muted', guide.colors.muted || '#DFE0F1');
-          set('--c-primary', guide.colors.primary || '#F05928');
-          set('--c-primary-contrast', guide.colors.onPrimary || '#FFFFFF');
-        }
-        if (guide.fontFamily) set('--font-sans', guide.fontFamily);
-        if (guide.radius) {
-          if (guide.radius.lg) set('--radius-lg', guide.radius.lg);
-          if (guide.radius.full) set('--radius-full', guide.radius.full);
-        }
-        if (guide.name) {
-          var title = document.getElementById('brand-title');
-          if (title) title.textContent = guide.name + ' Pricing Calculator';
-        }
-        if (guide.logoDataUrl) {
-          var logo = document.getElementById('brand-logo');
-          if (logo) {
-            logo.src = guide.logoDataUrl;
-            logo.classList.remove('hidden');
-          }
-        }
-      } catch (e) {
-        console.error('Brand guide application error:', e);
-      }
-    })();
-
-    document.addEventListener('DOMContentLoaded', function () {
-      document.body.classList.add('tw-ready');
-      setTimeout(function () {
-        var tailwindOk = !!window.tailwind;
-        var lucideOk = !!window.lucide;
-        if (!tailwindOk || !lucideOk) {
-          var alertEl = document.getElementById('cdn-alert');
-          if (alertEl) alertEl.classList.remove('hidden');
-        }
-      }, 400);
-      if (window.lucide && typeof window.lucide.createIcons === 'function') {
-        window.lucide.createIcons();
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
       initApp();
     });
 
@@ -260,7 +178,6 @@
     const STATE = {
       currency: 'USD',
       users: 500,
-      term: 'Monthly',
       totals: {
         baseMonthly: 0,
         baseAnnual: 0,
@@ -275,38 +192,26 @@
       if (!Number.isFinite(users) || users < 1) return 0;
       let total = 0;
       let remaining = users;
-
-      // Tier 1: 1-999 @ $4.00
       let tier1 = Math.min(remaining, 999);
       total += tier1 * 4.00;
       remaining -= tier1;
       if (remaining <= 0) return total;
-
-      // Tier 2: 1000-4999 @ $3.50 (4000 users)
       let tier2 = Math.min(remaining, 4000);
       total += tier2 * 3.50;
       remaining -= tier2;
       if (remaining <= 0) return total;
-
-      // Tier 3: 5000-9999 @ $3.00 (5000 users)
       let tier3 = Math.min(remaining, 5000);
       total += tier3 * 3.00;
       remaining -= tier3;
       if (remaining <= 0) return total;
-
-      // Tier 4: 10000-24999 @ $2.50 (15000 users)
       let tier4 = Math.min(remaining, 15000);
       total += tier4 * 2.50;
       remaining -= tier4;
       if (remaining <= 0) return total;
-
-      // Tier 5: 25000-49999 @ $2.00 (25000 users)
       let tier5 = Math.min(remaining, 25000);
       total += tier5 * 2.00;
       remaining -= tier5;
       if (remaining <= 0) return total;
-
-      // Tier 6: 50000+ @ $1.50
       total += remaining * 1.50;
       return total;
     }
@@ -327,7 +232,7 @@
     }
 
     function validateUsers(n) {
-      var valid = Number.isFinite(n) && n >= 250 && n <= 1000000;
+      const valid = Number.isFinite(n) && n >= 250 && n <= 1000000;
       return { valid, message: valid ? '' : 'Please enter a valid user count (minimum 250).' };
     }
 
@@ -352,17 +257,10 @@
     }
 
     function renderCustomerTable() {
-      const custPerUserHeader = document.getElementById('custPerUserHeader');
-      const thBaseCust = document.getElementById('thBaseCust');
-      const thTotalCust = document.getElementById('thTotalCust');
-      document.getElementById('custUsers').textContent = String(STATE.users);
+      document.getElementById('custUsers').textContent = STATE.users;
       const monthlyCostUSD = calculateMonthlyCost(STATE.users);
       const avgPerUserMonthly = monthlyCostUSD / STATE.users;
-      const perUser = avgPerUserMonthly;
-      document.getElementById('custPerUser').textContent = formatCurrencyFromUSD(perUser);
-      thBaseCust.textContent = 'Base MRR';
-      thTotalCust.textContent = 'Total ARR';
-      custPerUserHeader.textContent = 'Per User / month';
+      document.getElementById('custPerUser').textContent = formatCurrencyFromUSD(avgPerUserMonthly);
       document.getElementById('custBase').textContent = formatCurrencyFromUSD(STATE.totals.baseMonthly);
       document.getElementById('custTotal').textContent = formatCurrencyFromUSD(STATE.totals.totalAnnual);
     }
@@ -372,8 +270,8 @@
     }
 
     function renderForm() {
-      var usersInput = document.getElementById('users');
-      var currencySelect = document.getElementById('currency');
+      const usersInput = document.getElementById('users');
+      const currencySelect = document.getElementById('currency');
       if (Number(usersInput.value) !== STATE.users) usersInput.value = STATE.users;
       if (currencySelect.value !== STATE.currency) currencySelect.value = STATE.currency;
     }
@@ -381,12 +279,11 @@
     function renderTabs(active) {
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const isActive = btn.dataset.tab === active;
-        btn.setAttribute('data-active', String(isActive));
-        btn.setAttribute('aria-selected', String(isActive));
+        btn.setAttribute('data-active', isActive);
+        btn.setAttribute('aria-selected', isActive);
       });
       document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
-      const panel = document.getElementById('tab-' + active);
-      if (panel) panel.classList.remove('hidden');
+      document.getElementById(`tab-${active}`).classList.remove('hidden');
     }
 
     function renderAll() {
@@ -414,7 +311,6 @@
       const totalValue = STATE.totals.totalAnnual;
       const monthlyCostUSD = calculateMonthlyCost(STATE.users);
       const averageMonthlyPerUser = monthlyCostUSD / STATE.users;
-
       const lines = [
         'Recast Pricing Summary',
         '',
@@ -432,44 +328,36 @@
       ];
       const body = encodeURIComponent(lines.join('\n'));
       const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
-      try {
-        navigator.clipboard.writeText(lines.join('\n'));
+      navigator.clipboard.writeText(lines.join('\n')).then(() => {
         showToast('Summary copied to clipboard');
-      } catch (_) {
+      }).catch(() => {
         window.location.href = mailto;
-      }
+      });
     }
 
     function initEvents() {
       const usersInput = document.getElementById('users');
       const usersError = document.getElementById('users-error');
       const currencySelect = document.getElementById('currency');
-
       usersInput.addEventListener('input', () => {
         const n = parseInt(usersInput.value, 10);
         const { valid, message } = validateUsers(n);
-        if (!valid) {
-          usersError.textContent = message;
-          usersError.classList.remove('hidden');
-          return;
+        usersError.textContent = message;
+        usersError.classList.toggle('hidden', valid);
+        if (valid) {
+          STATE.users = n;
+          renderAll();
         }
-        usersError.classList.add('hidden');
-        STATE.users = n;
-        renderAll();
       });
-
       currencySelect.addEventListener('change', () => {
         STATE.currency = currencySelect.value;
         renderAll();
       });
-
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const tab = btn.dataset.tab;
-          renderTabs(tab);
+          renderTabs(btn.dataset.tab);
         });
       });
-
       document.getElementById('copy-email').addEventListener('click', (e) => {
         e.preventDefault();
         copyEmailSummary();
