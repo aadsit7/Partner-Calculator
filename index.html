@@ -51,18 +51,18 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <div style="display: flex; flex-direction: column; gap: 6px;">
-            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">Deal type</span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">Customer type</span>
             <div style="display: flex; gap: 4px; background: var(--surface-sunken); border-radius: 13px; padding: 4px;">
-              <sc-for list="{{ typeSegs }}" as="seg" hint-placeholder-count="3">
+              <sc-for list="{{ custSegs }}" as="seg" hint-placeholder-count="2">
                 <button onClick="{{ seg.onPick }}" style="flex: 1; font: inherit; font-size: 14px; font-weight: 600; padding: 9px 8px; border-radius: 10px; border: none; cursor: pointer; background: {{ seg.bg }}; color: {{ seg.color }}; box-shadow: {{ seg.shadow }}; transition: all 120ms;">{{ seg.label }}</button>
               </sc-for>
             </div>
           </div>
-          <sc-if value="{{ isAddon }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ isCurrent }}" hint-placeholder-val="{{ false }}">
             <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">Add-on handling</span>
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">Deal type</span>
               <div style="display: flex; gap: 4px; background: var(--surface-sunken); border-radius: 13px; padding: 4px;">
-                <sc-for list="{{ modeSegs }}" as="seg" hint-placeholder-count="2">
+                <sc-for list="{{ dealSegs }}" as="seg" hint-placeholder-count="3">
                   <button onClick="{{ seg.onPick }}" style="flex: 1; font: inherit; font-size: 13.5px; font-weight: 600; padding: 9px 8px; border-radius: 10px; border: none; cursor: pointer; background: {{ seg.bg }}; color: {{ seg.color }}; box-shadow: {{ seg.shadow }}; transition: all 120ms;">{{ seg.label }}</button>
                 </sc-for>
               </div>
@@ -79,7 +79,7 @@
           </sc-if>
           <sc-if value="{{ showTermPicker }}" hint-placeholder-val="{{ true }}">
             <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">Term</span>
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary);">{{ termPickerLabel }}</span>
               <sc-if value="{{ notProrated }}" hint-placeholder-val="{{ true }}">
                 <div style="display: flex; gap: 4px; background: var(--surface-sunken); border-radius: 13px; padding: 4px;">
                   <sc-for list="{{ termSegs }}" as="seg" hint-placeholder-count="3">
@@ -122,8 +122,9 @@
       <section style="background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 18px; padding: 24px;">
         <div style="margin-bottom: 6px;">
           <h2 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-strong);">What are you selling?</h2>
-          <p style="margin: 3px 0 0; font-size: 13.5px; color: var(--text-secondary);">Volume pricing applies automatically as quantities grow</p>
+          <p style="margin: 3px 0 0; font-size: 13.5px; color: var(--text-secondary);">{{ sellingSub }}</p>
         </div>
+        <sc-if value="{{ notRenOnly }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; flex-direction: column;">
           <sc-for list="{{ lineRows }}" as="line" hint-placeholder-count="1">
             <div style="display: grid; grid-template-columns: minmax(0,1fr) auto auto 28px; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border-subtle);">
@@ -153,10 +154,16 @@
           </sc-for>
         </div>
         <sc-if value="{{ hasAddPills }}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 14px;">
-            <sc-for list="{{ addPills }}" as="pill" hint-placeholder-count="2">
-              <button onClick="{{ pill.onAdd }}" style="font: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); background: var(--surface-card); border: 1px dashed var(--border-default); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all 120ms;" style-hover="color: var(--text-accent); border-color: var(--border-accent); background: var(--surface-accent-soft);">{{ pill.label }}</button>
-            </sc-for>
+          <div style="position: relative; padding-top: 14px; align-self: flex-start;">
+            <button onClick="{{ toggleAddMenu }}" style="font: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); background: var(--surface-card); border: 1px dashed var(--border-default); border-radius: 999px; padding: 7px 16px; cursor: pointer; transition: all 120ms;" style-hover="color: var(--text-accent); border-color: var(--border-accent); background: var(--surface-accent-soft);">+ Add product</button>
+            <sc-if value="{{ addMenuOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position: fixed; inset: 0; z-index: 30;" onClick="{{ closeAddMenu }}"></div>
+              <div style="position: absolute; left: 0; top: calc(100% + 6px); z-index: 31; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 12px; box-shadow: var(--shadow-lg, 0 12px 32px rgba(23,29,43,0.14)); padding: 6px; min-width: 280px; display: flex; flex-direction: column; gap: 1px;">
+                <sc-for list="{{ addPills }}" as="pill" hint-placeholder-count="2">
+                  <button onClick="{{ pill.onAdd }}" style="text-align: left; font: inherit; font-size: 13.5px; font-weight: 500; padding: 9px 12px; border-radius: 8px; border: none; background: transparent; cursor: pointer; color: var(--text-primary); display: flex; justify-content: space-between; align-items: baseline; gap: 12px;" style-hover="background: var(--surface-hover, #f6f8fc);"><span>{{ pill.name }}</span><span style="color: var(--text-tertiary); font-size: 12px;">{{ pill.unitHint }}</span></button>
+                </sc-for>
+              </div>
+            </sc-if>
           </div>
         </sc-if>
         <sc-if value="{{ bundleOn }}" hint-placeholder-val="{{ false }}">
@@ -169,6 +176,50 @@
               <span style="font-size: 12.5px; color: var(--text-secondary);">{{ supportDesc }}</span>
             </div>
             <x-import component-from-global-scope="AdsitDesignSystem_ab046a.Switch" checked="{{ qSupport }}" onChange="{{ onSupportAll }}" hint-size="44px,26px"></x-import>
+          </div>
+        </sc-if>
+        </sc-if>
+        <sc-if value="{{ renOnly }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: minmax(0,1fr) 96px 170px 28px; gap: 12px; align-items: center; padding: 10px 4px 8px; border-bottom: 1px solid var(--border-subtle); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary);">
+            <span>Product</span><span style="text-align: right;">Quantity</span><span style="text-align: right;">Amount / yr</span><span></span>
+          </div>
+          <sc-for list="{{ renewRows }}" as="rl" hint-placeholder-count="1">
+            <div style="display: grid; grid-template-columns: minmax(0,1fr) 96px 170px 28px; gap: 12px; align-items: center; padding: 12px 4px; border-bottom: 1px solid var(--border-subtle);">
+              <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                <span style="width: 34px; height: 34px; border-radius: 10px; background: var(--surface-accent-soft); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">{{ rl.initials }}</span>
+                <select class="sqg-sel" value="{{ rl.productId }}" onChange="{{ rl.onProduct }}" style="height: 38px; padding: 0 10px; border: 1px solid var(--border-default); border-radius: 10px; background: var(--surface-card); font: inherit; font-size: 14px; font-weight: 500; color: var(--text-primary); width: 100%; cursor: pointer;">{{ existOptionEls }}</select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <input class="sqg-in" type="text" inputMode="numeric" value="{{ rl.qty }}" onChange="{{ rl.onQty }}" aria-label="Quantity" style="height: 38px; padding: 0 8px; border: 1px solid var(--border-default); border-radius: 10px; background: var(--surface-card); font-family: var(--font-mono, monospace); font-size: 13.5px; color: var(--text-primary); text-align: right; box-sizing: border-box; width: 100%;">
+                <span style="font-size: 11px; color: var(--text-tertiary); text-align: right; padding-right: 2px;">{{ rl.unitNoun }}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="color: var(--text-tertiary); font-size: 14px;">$</span>
+                <input class="sqg-in" type="number" min="0" step="100" value="{{ rl.price }}" onChange="{{ rl.onPrice }}" aria-label="Current amount per year" style="height: 38px; padding: 0 10px; border: 1px solid var(--border-default); border-radius: 10px; background: var(--surface-card); font-family: var(--font-mono, monospace); font-size: 13.5px; color: var(--text-primary); width: 100%; text-align: right; box-sizing: border-box;">
+                <span style="color: var(--text-tertiary); font-size: 12px; white-space: nowrap;">/yr</span>
+              </div>
+              <sc-if value="{{ rl.canRemove }}" hint-placeholder-val="{{ false }}">
+                <x-import component-from-global-scope="AdsitDesignSystem_ab046a.IconButton" name="x" size="sm" onClick="{{ rl.onRemove }}" aria-label="Remove product" hint-size="28px,28px"></x-import>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="padding-top: 14px;">
+            <button onClick="{{ addRenewLine }}" style="font: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); background: var(--surface-card); border: 1px dashed var(--border-default); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all 120ms;" style-hover="color: var(--text-accent); border-color: var(--border-accent); background: var(--surface-accent-soft);">+ Add product</button>
+          </div>
+          <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 14px; background: var(--surface-sunken); border-radius: 12px; flex-wrap: wrap;">
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 180px;">
+              <span style="font-size: 13.5px; font-weight: 600;">Annual cost increase</span>
+              <span style="font-size: 12.5px; color: var(--text-secondary);">{{ upliftDesc }}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <sc-if value="{{ upliftOn }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 2px; width: 190px;">
+                  <input type="range" min="0" max="10" step="0.5" value="{{ qUpliftPct }}" onChange="{{ onUpliftPct }}" onInput="{{ onUpliftPct }}" style="width: 100%;">
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-tertiary);"><span>0%</span><span style="font-family: var(--font-mono, monospace); font-size: 12px; font-weight: 600; color: var(--text-accent);">{{ upliftPctLabel }}</span><span>10%</span></div>
+                </div>
+              </sc-if>
+              <x-import component-from-global-scope="AdsitDesignSystem_ab046a.Switch" checked="{{ upliftOn }}" onChange="{{ onUplift }}" hint-size="44px,26px"></x-import>
+            </div>
           </div>
         </sc-if>
       </section>
@@ -265,7 +316,10 @@
           </sc-for>
         </div>
         <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px;">
-          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">List price · annual</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ msrpAnnual }}</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">{{ msrpRowLabel }}</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ msrpAnnual }}</span></div>
+          <sc-if value="{{ hasUplift }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">Annual increase · {{ upliftPctLabel }}</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">+{{ upliftAmt }}</span></div>
+          </sc-if>
           <sc-if value="{{ hasBundle }}" hint-placeholder-val="{{ false }}">
             <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">{{ bundleRowLabel }}</span><span style="color: var(--green-600); font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">−{{ bundleAmt }}</span></div>
           </sc-if>
@@ -280,10 +334,13 @@
           </sc-if>
           <div style="border-top: 1px solid var(--border-subtle); margin: 2px 0;"></div>
           <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px;"><span>{{ netRowLabel }}</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ netAnnual }}</span></div>
+          <sc-if value="{{ hasStub }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">{{ stubLabel }}</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ stubAmt }}</span></div>
+          </sc-if>
           <sc-if value="{{ hasExisting }}" hint-placeholder-val="{{ false }}">
             <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-secondary);">Current products · renew</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ existingAnnual }}</span></div>
             <div style="border-top: 1px solid var(--border-subtle); margin: 2px 0;"></div>
-            <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px;"><span>Total · annual</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ totalAnnual }}</span></div>
+            <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px;"><span>Renewal · per year</span><span style="font-family: var(--font-mono, monospace); font-variant-numeric: tabular-nums;">{{ renewalAnnual }}</span></div>
           </sc-if>
         </div>
         <sc-if value="{{ hasYears }}" hint-placeholder-val="{{ false }}">
@@ -529,9 +586,11 @@ class Component extends DCLogic {
       number: 'QT-' + new Date().getFullYear() + '-' + String(Math.floor(1000 + Math.random() * 9000)),
       customer: '', email: '', preparedBy: '', expires: d, partnerCompany: '', partnerEmail: '',
       lines: [ { id: 'l1', productId: 'rct', qty: 1000 } ],
-      years: 1, months: 12, partner: false, quoteType: 'new', marginNewPct: 20, marginRenPct: 15, extraPct: 0, supportAll: false,
+      years: 1, months: 12, partner: false, customerType: 'new', dealType: 'addon', marginNewPct: 20, marginRenPct: 15, extraPct: 0, supportAll: false,
       coTermDate: new Date(Date.now() + 182 * 864e5).toISOString().slice(0, 10),
-      addonMode: 'coterm', existing: [],
+      existing: [],
+      renewLines: [ { id: 'r1', productId: 'rct', qty: 1000, price: 12500 } ],
+      uplift: false, upliftPct: 3,
     };
   }
   componentDidMount() {
@@ -600,7 +659,9 @@ class Component extends DCLogic {
     const epCount = computed.filter((x) => !x.c.isUser).length;
     const bundleOn = epCount >= r.bundleMin;
     const partnerOn = partnerFeature && !!q.partner;
-    const rawMargin = q.quoteType === 'ren' ? (q.marginRenPct ?? q.marginPct) : (q.marginNewPct ?? q.marginPct);
+    const isCurrent = q.customerType === 'current';
+    const dealType = isCurrent ? (q.dealType || 'addon') : 'new';
+    const rawMargin = dealType === 'ren' ? (q.marginRenPct ?? 15) : (q.marginNewPct ?? 20);
     const margin = partnerOn ? Math.min(100, Math.max(0, +rawMargin || 0)) : 0;
     const extra = Math.max(0, Math.min(r.maxExtra, +q.extraPct || 0));
     let msrpC = 0, afterBundleC = 0, step1C = 0, netC = 0;
@@ -615,28 +676,66 @@ class Component extends DCLogic {
     });
     const years = q.years || 1;
     const months = q.months || years * 12;
-    const isAddon = q.quoteType === 'addon';
-    const addonRenew = isAddon && q.addonMode === 'renew';
-    let effYears = cfg.allowProration ? months / 12 : years;
-    let addonDays = 0, addonValid = false;
-    if (isAddon && !addonRenew) {
+    const isCoterm = dealType === 'addon';
+    const addonRenew = dealType === 'addonren';
+    const needsDate = isCoterm || addonRenew;
+    const baseYears = cfg.allowProration ? months / 12 : years;
+    let addonDays = 0, addonValid = false, stubYears = 0;
+    if (needsDate) {
       const today = new Date(); today.setHours(0, 0, 0, 0);
       const d = q.coTermDate ? new Date(q.coTermDate + 'T00:00:00') : null;
       addonDays = d && !isNaN(d) ? Math.round((d - today) / 864e5) : 0;
       addonValid = addonDays >= 1;
-      effYears = Math.min(5, Math.max(30, addonDays) / 365);
+      stubYears = Math.min(5, Math.max(30, addonDays) / 365);
     }
+    const effYears = isCoterm ? stubYears : baseYears;
     const existingC = addonRenew ? (q.existing || []).reduce((a, e) => a + Math.round(Math.max(0, +e.price || 0) * 100), 0) : 0;
     const floorY = Math.max(0, Math.floor(effYears + 1e-9));
     let termPct = 0;
     for (const t of cfg.terms.slice().sort((a, b) => a.years - b.years)) { if (floorY >= t.years) termPct = t.pct; }
+    if (dealType === 'ren') {
+      const rl = q.renewLines || [];
+      const baseC = rl.reduce((a, e) => a + Math.round(Math.max(0, +e.price || 0) * 100), 0);
+      const p = q.uplift ? Math.min(10, Math.max(0, +q.upliftPct || 0)) : 0;
+      const nYears = Math.max(1, Math.ceil(baseYears - 1e-9));
+      let tcvC2 = 0, grossC = 0; const renYears = [];
+      for (let i = 1; i <= nYears; i++) {
+        const frac = Math.min(1, baseYears - (i - 1));
+        const rateC = Math.round(baseC * Math.pow(1 + p / 100, i));
+        const amtC = Math.round(rateC * frac);
+        const netYC = Math.round(amtC * (100 - margin) / 100 * (100 - extra) / 100 * (100 - termPct) / 100);
+        grossC += amtC; tcvC2 += netYC;
+        renYears.push({ frac, netYC });
+      }
+      const y1 = Math.round(baseC * (1 + p / 100));
+      const s1 = Math.round(y1 * (100 - margin) / 100);
+      const s2 = Math.round(y1 * (100 - margin) / 100 * (100 - extra) / 100);
+      const s3 = Math.round(y1 * (100 - margin) / 100 * (100 - extra) / 100 * (100 - termPct) / 100);
+      return {
+        lines, bundleOn: false, partnerOn, margin, extra, termPct, effYears: baseYears,
+        isCurrent, dealType, isCoterm: false, addonRenew: false, needsDate: false,
+        addonDays: 0, addonValid: true, stubYears: 0, baseYears, existingC: 0, stubC: 0, renewalAnnualC: s3,
+        isRenOnly: true, renBaseC: baseC, upliftP: p, upliftY1C: y1 - baseC, renYears,
+        msrpC: baseC, bundleAmtC: 0, marginAmtC: y1 - s1, extraAmtC: s1 - s2, termAmtC: s2 - s3,
+        netFinalC: s3, totalAnnualC: s3, tcvC: tcvC2, msrpTcvC: grossC,
+      };
+    }
     const termAmtC = netC - Math.round(netC * (100 - termPct) / 100);
     const netFinalC = netC - termAmtC;
+    const stubC = addonRenew ? Math.round(netFinalC * stubYears) : 0;
+    const renewalAnnualC = netFinalC + existingC;
+    const tcvC = isCoterm ? Math.round(netFinalC * stubYears)
+      : addonRenew ? stubC + Math.round(renewalAnnualC * baseYears)
+      : Math.round(netFinalC * baseYears);
+    const msrpTcvC = isCoterm ? Math.round(msrpC * stubYears)
+      : addonRenew ? Math.round(msrpC * stubYears) + Math.round((msrpC + existingC) * baseYears)
+      : Math.round(msrpC * baseYears);
     return {
-      lines, bundleOn, partnerOn, margin, extra, termPct, effYears, isAddon, addonDays, addonValid, addonRenew, existingC,
+      lines, bundleOn, partnerOn, margin, extra, termPct, effYears, isCurrent, dealType, isCoterm, addonRenew, needsDate,
+      isRenOnly: false, renBaseC: 0, upliftP: 0, upliftY1C: 0, renYears: [],
+      addonDays, addonValid, stubYears, baseYears, existingC, stubC, renewalAnnualC,
       msrpC, bundleAmtC: msrpC - afterBundleC, marginAmtC: afterBundleC - step1C, extraAmtC: step1C - netC, termAmtC,
-      netFinalC, totalAnnualC: netFinalC + existingC,
-      tcvC: Math.round((netFinalC + existingC) * effYears), msrpTcvC: Math.round((msrpC + existingC) * effYears),
+      netFinalC, totalAnnualC: renewalAnnualC, tcvC, msrpTcvC,
     };
   }
   bumpStep(isUser, qty) { return isUser ? 50 : (qty < 1000 ? 100 : qty < 10000 ? 500 : 1000); }
@@ -682,15 +781,19 @@ class Component extends DCLogic {
 
     const inQuote = new Set(q.lines.map((l) => l.productId));
     const addPills = cfg.products.filter((p) => !inQuote.has(p.id)).map((p) => ({
-      label: '+ ' + p.name,
-      onAdd: () => this.setQ({ lines: q.lines.concat([{ id: this.uid(), productId: p.id, qty: p.unit === 'user' ? r.minUsers : 1000 }]) }),
+      name: p.name,
+      unitHint: p.unit === 'user' ? 'per user' : 'per endpoint',
+      onAdd: () => {
+        this.setState({ addMenu: false });
+        this.setQ({ lines: q.lines.concat([{ id: this.uid(), productId: p.id, qty: p.unit === 'user' ? r.minUsers : 1000 }]) });
+      },
     }));
 
     const prorated = !!cfg.allowProration;
     const years = q.years || 1;
     const months = q.months || years * 12;
     const coTermMo = (m.addonDays > 0 ? m.addonDays : 30) / 30.44;
-    const termLabel = m.isAddon && !m.addonRenew
+    const termLabel = m.isCoterm
       ? 'co-term \u00b7 ' + coTermMo.toFixed(1) + ' mo'
       : prorated ? months + ' mo' + (months % 12 !== 0 ? ' \u00b7 prorated' : '') : years + (years > 1 ? ' years' : ' year');
     const termsSorted = cfg.terms.slice().sort((a, b) => a.years - b.years);
@@ -705,21 +808,20 @@ class Component extends DCLogic {
       };
     });
     const partnerActive = m.partnerOn;
-    const isRen = q.quoteType === 'ren';
+    const isRen = m.dealType === 'ren';
     const segStyle = (active) => ({
       bg: active ? 'var(--surface-card)' : 'transparent',
       color: active ? 'var(--text-strong)' : 'var(--text-secondary)',
       shadow: active ? 'var(--shadow-sm, 0 1px 3px rgba(23,29,43,0.12))' : 'none',
     });
-    const isAddon = q.quoteType === 'addon';
-    const typeSegs = [
-      Object.assign({ label: 'Net new', onPick: () => this.setQ({ quoteType: 'new' }) }, segStyle(!isRen && !isAddon)),
-      Object.assign({ label: 'Add-on', onPick: () => this.setQ({ quoteType: 'addon' }) }, segStyle(isAddon)),
-      Object.assign({ label: 'Renewal', onPick: () => this.setQ({ quoteType: 'ren' }) }, segStyle(isRen)),
+    const custSegs = [
+      Object.assign({ label: 'Net new customer', onPick: () => this.setQ({ customerType: 'new' }) }, segStyle(!m.isCurrent)),
+      Object.assign({ label: 'Current customer', onPick: () => this.setQ({ customerType: 'current' }) }, segStyle(m.isCurrent)),
     ];
-    const modeSegs = [
-      Object.assign({ label: 'Prorate to renewal date', onPick: () => this.setQ({ addonMode: 'coterm' }) }, segStyle(!m.addonRenew)),
-      Object.assign({ label: 'Renew everything now', onPick: () => this.setQ({ addonMode: 'renew' }) }, segStyle(m.addonRenew)),
+    const dealSegs = [
+      Object.assign({ label: 'Add-on', onPick: () => this.setQ({ dealType: 'addon' }) }, segStyle(m.isCoterm)),
+      Object.assign({ label: 'Renewal', onPick: () => this.setQ({ dealType: 'ren' }) }, segStyle(isRen)),
+      Object.assign({ label: 'Add-on + renewal', onPick: () => this.setQ({ dealType: 'addonren' }) }, segStyle(m.addonRenew)),
     ];
     const existOptionEls = cfg.products.map((p) => React.createElement('option', { key: p.id, value: p.id }, p.name));
     const existRows = (q.existing || []).map((ex) => ({
@@ -784,28 +886,64 @@ class Component extends DCLogic {
       headerIconLabel: view === 'calc' ? 'Open pricing settings' : 'Close settings',
       toggleView: () => this.setState({ view: view === 'calc' ? 'settings' : 'calc' }),
       quoteNumber: q.number,
-      lineRows, addPills, hasAddPills: addPills.length > 0,
+      lineRows, addPills, hasAddPills: !m.isRenOnly && addPills.length > 0,
+      addMenuOpen: !!this.state.addMenu && addPills.length > 0,
+      toggleAddMenu: () => this.setState({ addMenu: !this.state.addMenu }),
+      closeAddMenu: () => this.setState({ addMenu: false }),
+      renOnly: m.isRenOnly, notRenOnly: !m.isRenOnly,
+      sellingSub: m.isRenOnly
+        ? 'Enter what the customer pays today \u2014 the increase and any discounts are applied for the renewal'
+        : 'Volume pricing applies automatically as quantities grow',
+      msrpRowLabel: m.isRenOnly ? 'Current \u00b7 annual' : 'List price \u00b7 annual',
+      renewRows: (q.renewLines || []).map((rl) => {
+        const p = cfg.products.find((x) => x.id === rl.productId) || cfg.products[0] || { name: '?', unit: 'endpoint' };
+        const words = String(p.name || '?').split(/[^A-Za-z0-9]+/).filter(Boolean);
+        return {
+          id: rl.id, productId: rl.productId, qty: rl.qty, price: rl.price,
+          initials: (words.length > 1 ? words[0][0] + words[1][0] : String(words[0] || '?').slice(0, 2)).toUpperCase(),
+          unitNoun: p.unit === 'user' ? 'users' : 'endpoints',
+          canRemove: (q.renewLines || []).length > 1,
+          onProduct: (e) => this.setQ({ renewLines: q.renewLines.map((x) => x.id === rl.id ? Object.assign({}, x, { productId: e.target.value }) : x) }),
+          onQty: (e) => this.setQ({ renewLines: q.renewLines.map((x) => x.id === rl.id ? Object.assign({}, x, { qty: this.int(e.target.value) }) : x) }),
+          onPrice: (e) => this.setQ({ renewLines: q.renewLines.map((x) => x.id === rl.id ? Object.assign({}, x, { price: Math.max(0, parseFloat(e.target.value) || 0) }) : x) }),
+          onRemove: () => this.setQ({ renewLines: q.renewLines.filter((x) => x.id !== rl.id) }),
+        };
+      }),
+      addRenewLine: () => this.setQ({ renewLines: (q.renewLines || []).concat([{ id: this.uid(), productId: (cfg.products[0] || {}).id, qty: 1000, price: 0 }]) }),
+      upliftOn: !!q.uplift,
+      onUplift: (e) => this.setQ({ uplift: e.target.checked }),
+      qUpliftPct: q.upliftPct,
+      onUpliftPct: (e) => this.setQ({ upliftPct: Math.min(10, Math.max(0, parseFloat(e.target.value) || 0)) }),
+      upliftPctLabel: (q.uplift ? (+q.upliftPct || 0) : 0) + '%',
+      upliftDesc: q.uplift
+        ? '+' + (+q.upliftPct || 0) + '% each year of the term, compounding'
+        : 'Include a yearly price increase in the renewal',
+      hasUplift: m.isRenOnly && m.upliftY1C > 0,
+      upliftAmt: this.fmt(m.upliftY1C / 100),
       bundleOn: m.bundleOn,
       bundleBanner: 'RCT bundle applied \u2014 ' + r.bundlePct + '% off endpoint products',
       hasEndpoint,
       qSupport: !!q.supportAll,
       onSupportAll: (e) => this.setQ({ supportAll: e.target.checked }),
       supportDesc: 'Adds ' + r.suppPct + '% per endpoint product, min ' + this.fmt(r.suppMin) + '/yr',
-      notProrated: !prorated, prorated, termSegs, typeSegs,
-      isAddon: m.isAddon, notAddon: !m.isAddon,
-      addonRenew: m.addonRenew, showCoterm: m.isAddon && !m.addonRenew, showTermPicker: !m.isAddon || m.addonRenew,
-      modeSegs, existRows, existOptionEls,
+      notProrated: !prorated, prorated, termSegs, custSegs, dealSegs,
+      isCurrent: m.isCurrent,
+      addonRenew: m.addonRenew, showCoterm: m.needsDate, showTermPicker: !m.isCoterm,
+      termPickerLabel: m.addonRenew ? 'Renewal term' : 'Term',
+      existRows, existOptionEls,
       addExisting: () => this.setQ({ existing: (q.existing || []).concat([{ id: this.uid(), productId: (cfg.products[0] || {}).id, price: 0 }]) }),
       qCoTerm: q.coTermDate,
       onCoTerm: (e) => this.setQ({ coTermDate: e.target.value }),
-      coTermChip: m.addonValid ? coTermMo.toFixed(1) + ' months \u00b7 ' + Math.round(m.effYears * 100) + '% of annual' : 'Pick a future date',
-      termHint: m.isAddon
-        ? (m.addonRenew
-          ? 'Everything renews together today for a fresh term \u2014 new products priced from the rate card, current products kept at their existing price'
-          : (m.addonValid
-            ? 'New products are prorated to the existing renewal date, then renew together with the current agreement'
-            : 'Enter the customer\u2019s current renewal date \u2014 pricing is prorated to it (1-month minimum)'))
-        : m.termPct > 0 ? Math.floor(m.effYears) + '-year term applies a ' + m.termPct + '% discount' : 'Billed once per year \u00b7 annual price \u00d7 term = total contract value',
+      coTermChip: m.addonValid ? coTermMo.toFixed(1) + ' months \u00b7 ' + Math.round(m.stubYears * 100) + '% of annual' : 'Pick a future date',
+      termHint: m.isCoterm
+        ? (m.addonValid
+          ? 'New products are prorated to the existing renewal date, then renew together with the current agreement'
+          : 'Enter the customer\u2019s current renewal date \u2014 pricing is prorated to it (1-month minimum)')
+        : m.addonRenew
+          ? 'New products are prorated to the renewal date, then everything renews together for the term above \u2014 new products from the rate card, current products at today\u2019s price'
+          : isRen
+            ? 'Enter the products and current pricing below \u2014 add a yearly increase if needed'
+            : m.termPct > 0 ? Math.floor(m.effYears) + '-year term applies a ' + m.termPct + '% discount' : 'Billed once per year \u00b7 annual price \u00d7 term = total contract value',
       qMonths: months, monthsLabel: months + ' months', onMonths: (e) => this.setQ({ months: parseInt(e.target.value, 10) || 12 }),
       partnerFeature,
       qPartner: partnerFeature && !!q.partner,
@@ -831,11 +969,18 @@ class Component extends DCLogic {
       onPreparedBy: (e) => this.setQ({ preparedBy: e.target.value }),
       onExpires: (e) => this.setQ({ expires: e.target.value }),
       termLabel,
-      summaryItems: m.lines.map(({ c }) => ({
+      summaryItems: (m.isRenOnly ? (q.renewLines || []).map((rl) => {
+        const p = cfg.products.find((x) => x.id === rl.productId);
+        return {
+          name: p ? p.name : 'Product',
+          qtyDisp: this.int(rl.qty).toLocaleString('en-US') + ' ' + (p && p.unit === 'user' ? 'users' : 'endpoints') + ' \u00b7 renews',
+          amt: this.fmt(Math.max(0, +rl.price || 0)),
+        };
+      }) : m.lines.map(({ c }) => ({
         name: c.prod.name,
         qtyDisp: c.units.toLocaleString('en-US') + ' ' + (c.isUser ? 'users' : 'endpoints') + (c.support > 0 ? ' \u00b7 support' : '') + (m.addonRenew ? ' \u00b7 new' : ''),
         amt: this.fmt(c.msrp),
-      })).concat(m.addonRenew ? (q.existing || []).map((ex) => {
+      }))).concat(m.addonRenew ? (q.existing || []).map((ex) => {
         const p = cfg.products.find((x) => x.id === ex.productId);
         return { name: p ? p.name : 'Current product', qtyDisp: 'current \u00b7 renews at today\u2019s price', amt: this.fmt(Math.max(0, +ex.price || 0)) };
       }) : []),
@@ -844,33 +989,48 @@ class Component extends DCLogic {
       hasMargin: m.marginAmtC > 0, marginAmt: this.fmt(m.marginAmtC / 100), marginRowLabel: 'Partner margin \u00b7 ' + m.margin + '%',
       hasExtra: m.extraAmtC > 0, extraAmt: this.fmt(m.extraAmtC / 100),
       hasTermDisc: m.termAmtC > 0, termAmt: this.fmt(m.termAmtC / 100), termPct: m.termPct,
-      netRowLabel: m.addonRenew ? (partnerActive ? 'New products \u00b7 partner net' : 'New products \u00b7 annual') : (partnerActive ? 'Partner net \u00b7 annual' : 'Your price \u00b7 annual'),
+      netRowLabel: m.isRenOnly
+        ? (partnerActive ? 'Partner net \u00b7 annual' : 'Renewal \u00b7 annual')
+        : m.addonRenew ? (partnerActive ? 'New products \u00b7 partner net' : 'New products \u00b7 annual') : (partnerActive ? 'Partner net \u00b7 annual' : 'Your price \u00b7 annual'),
       netAnnual: this.fmt(m.netFinalC / 100),
       hasExisting: m.addonRenew && (q.existing || []).length > 0,
       existingAnnual: this.fmt(m.existingC / 100),
-      totalAnnual: this.fmt(m.totalAnnualC / 100),
-      hasYears: (!m.isAddon || m.addonRenew) && m.effYears > 1 + 1e-9,
+      renewalAnnual: this.fmt(m.renewalAnnualC / 100),
+      hasStub: m.addonRenew,
+      stubLabel: 'Prorated to renewal \u00b7 ' + coTermMo.toFixed(1) + ' mo',
+      stubAmt: this.fmt(m.stubC / 100),
+      hasYears: m.addonRenew || (!m.isCoterm && m.effYears > 1 + 1e-9),
       yearRows: (() => {
-        const fullYears = Math.floor(m.effYears + 1e-9);
+        if (m.isRenOnly) {
+          return m.renYears.map((y, i) => ({
+            label: 'Year ' + (i + 1) + (y.frac < 1 - 1e-9 ? ' \u00b7 ' + Math.round(y.frac * 12) + ' mo' : ''),
+            amt: this.fmt(y.netYC / 100),
+          }));
+        }
         const rows = [];
-        let acc = 0;
-        for (let i = 1; i <= fullYears; i++) { rows.push({ label: 'Year ' + i, amt: this.fmt(m.totalAnnualC / 100) }); acc += m.totalAnnualC; }
-        if (m.effYears - fullYears > 1e-9) {
+        if (m.addonRenew) rows.push({ label: 'Now \u2192 renewal \u00b7 ' + coTermMo.toFixed(1) + ' mo', amt: this.fmt(m.stubC / 100) });
+        const annualC = m.addonRenew ? m.renewalAnnualC : m.netFinalC;
+        const fullYears = Math.floor(m.baseYears + 1e-9);
+        let acc = m.addonRenew ? m.stubC : 0;
+        for (let i = 1; i <= fullYears; i++) { rows.push({ label: 'Year ' + i, amt: this.fmt(annualC / 100) }); acc += annualC; }
+        if (!m.isCoterm && m.baseYears - fullYears > 1e-9) {
           const remMo = months - fullYears * 12;
           rows.push({ label: 'Year ' + (fullYears + 1) + ' \u00b7 ' + remMo + ' mo', amt: this.fmt((m.tcvC - acc) / 100) });
         }
         return rows;
       })(),
-      tcvLabel: partnerActive ? 'Partner price \u00b7 total' : (m.isAddon && !m.addonRenew ? 'Total to renewal' : 'Total contract value'),
+      tcvLabel: partnerActive ? 'Partner price \u00b7 total' : (m.isCoterm ? 'Total to renewal' : 'Total contract value'),
       tcv: this.fmt(m.tcvC / 100),
-      tcvSub: (m.isAddon
-        ? (m.addonRenew ? 'Add-on + renewal \u00b7 ' + termLabel : 'Add-on \u00b7 co-terms ' + (q.coTermDate || '\u2014'))
-        : (isRen ? 'Renewal' : 'Net new') + ' \u00b7 ' + termLabel) + (partnerActive ? ' \u00b7 ' + m.margin + '% margin' : ' \u00b7 list price'),
+      tcvSub: (m.isCoterm ? 'Add-on \u00b7 co-terms ' + (q.coTermDate || '\u2014')
+        : m.addonRenew ? 'Add-on + renewal \u00b7 co-terms ' + (q.coTermDate || '\u2014') + ' \u00b7 then ' + termLabel
+        : (isRen ? 'Renewal' : 'Net new') + ' \u00b7 ' + termLabel + (m.isRenOnly && m.upliftP > 0 ? ' \u00b7 +' + m.upliftP + '%/yr' : '')) + (partnerActive ? ' \u00b7 ' + m.margin + '% margin' : (m.isRenOnly ? '' : ' \u00b7 list price')),
       hasSave: totalDiscC > 0 && m.msrpC > 0, saveAmt: this.fmt(totalDiscC / 100), savePct: m.msrpC > 0 ? Math.round(totalDiscC / m.msrpC * 100) : 0,
       partnerActive,
       msrpTcv: this.fmt(m.msrpTcvC / 100),
       partnerSavings: this.fmt((m.msrpTcvC - m.tcvC) / 100),
       createQuote: () => {
+        if (m.needsDate && !m.addonValid) { this.flash('Pick the customer\u2019s renewal date (a future date) first', 'warn'); return; }
+        if (m.isRenOnly && ((q.renewLines || []).length === 0 || (q.renewLines || []).some((x) => !(+x.price > 0)))) { this.flash('Enter the amount per year for each renewing product', 'warn'); return; }
         if (partnerActive && !q.partnerCompany.trim()) { this.flash('Add the partner company (bill to) in \u201cWho\u2019s it for?\u201d', 'warn'); return; }
         if (!q.customer.trim()) { this.flash('Add a customer name in \u201cWho\u2019s it for?\u201d first', 'warn'); return; }
         this.flash('Quote ' + q.number + ' ready for ' + q.customer + (partnerActive ? ' via ' + q.partnerCompany : '') + ' \u2014 PDF export coming soon', 'ok');
